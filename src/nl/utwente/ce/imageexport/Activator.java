@@ -12,63 +12,62 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class Activator extends AbstractUIPlugin
+{
+    /** The plug-in ID */
+    public static final String PLUGIN_ID = "nl.utwente.ce.imageexport";
 
-	/** The plug-in ID */
-	public static final String PLUGIN_ID = "nl.utwente.ce.imageexport";
+    /** The plug-in ID */
+    public static final String FORMATPROVIDEREXTENSION_ID = "nl.utwente.ce.imageexport.exportFormatProvider";
 
-	/** The plug-in ID */
-	public static final String FORMATPROVIDEREXTENSION_ID = "nl.utwente.ce.imageexport.exportFormatProvider";
+    /** The shared instance */
+    private static Activator plugin;
 
-	/** The shared instance */
-	private static Activator plugin;
+    private static List<ImageFormatProvider> imageProviders;
 
-	private static List<ImageFormatProvider> imageProviders;
+    public Activator()
+    {
+    }
 
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
+    public void start(BundleContext context) throws Exception
+    {
+        super.start(context);
 
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
+        // Find available exporting format providers
+        imageProviders = new ArrayList<ImageFormatProvider>();
+        IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(
+                FORMATPROVIDEREXTENSION_ID);
+        for (IConfigurationElement e : config)
+        {
+            final Object o = e.createExecutableExtension("class");
+            if (o instanceof IImageFormatProvider)
+            {
+                final String id = e.getAttribute("id");
+                final String name = e.getAttribute("name");
+                final String extensions = e.getAttribute("extensions");
+                imageProviders.add(new ImageFormatProvider(id, name, extensions, (IImageFormatProvider) o));
+            }
+        }
+        imageProviders = Collections.unmodifiableList(imageProviders);
+        plugin = this;
+    }
 
-		// Find available exporting format providers
-		imageProviders = new ArrayList<ImageFormatProvider>();
-		IConfigurationElement[] config = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(FORMATPROVIDEREXTENSION_ID);
-		for (IConfigurationElement e : config) {
-			final Object o = e.createExecutableExtension("class");
-			if (o instanceof IImageFormatProvider) {
-				final String id = e.getAttribute("id");
-				final String name = e.getAttribute("name");
-				final String extensions = e.getAttribute("extensions");
-				imageProviders.add(new ImageFormatProvider(id, name, extensions, (IImageFormatProvider) o));
-			}
-		}
-		imageProviders = Collections.unmodifiableList(imageProviders);
-		plugin = this;
-	}
+    public void stop(BundleContext context) throws Exception
+    {
+        plugin = null;
+        imageProviders = null;
+        super.stop(context);
+    }
 
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		imageProviders = null;
-		super.stop(context);
-	}
+    /** @return the shared instance */
+    public static Activator getDefault()
+    {
+        return plugin;
+    }
 
-	/**
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
-	/**
-	 * @returns a list of {@link IImageFormatProviders} that are available to
-	 *          export images
-	 */
-	public static List<ImageFormatProvider> getImageProviders() {
-		return imageProviders;
-	}
+    /** @return a list of {@link IImageFormatProviders} that are available to export images */
+    public static List<ImageFormatProvider> getImageProviders()
+    {
+        return imageProviders;
+    }
 }
