@@ -38,4 +38,15 @@ public class ImageFormatProvider
     {
         return provider;
     }
+
+    /** @return true if filename has one of the available extensions */
+    public boolean isValidExtension(String filename)
+    {
+        for(String extension: extensions) {
+            if(filename.endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

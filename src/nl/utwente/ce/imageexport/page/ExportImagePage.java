@@ -10,6 +10,8 @@ import nl.utwente.ce.imageexport.ImageFormatProvider;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -22,7 +24,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class ExportImagePage extends WizardPage implements SelectionListener
+public class ExportImagePage extends WizardPage implements SelectionListener, ModifyListener
 {
     static private final String EXPORTIMAGEPAGEID = "export-image-page";
 
@@ -82,7 +84,8 @@ public class ExportImagePage extends WizardPage implements SelectionListener
             fileNamePanel.setLayout(new GridLayout(2, false));
 
             fileNameField = new Text(fileNamePanel, SWT.LEFT);
-            fileNameField.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
+            fileNameField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            fileNameField.addModifyListener(this);
             Button browseButton = new Button(fileNamePanel, SWT.LEFT);
             browseButton.setText("Browse...");
         }
@@ -128,6 +131,15 @@ public class ExportImagePage extends WizardPage implements SelectionListener
         }
     }
 
+    @Override
+    public void modifyText(ModifyEvent e)
+    {
+        if (e.getSource().equals(fileNameField))
+        {
+            validatePage();
+        }
+    }
+
     /** Update the page for the currently selected image format */
     protected void formatChanged()
     {
@@ -161,5 +173,28 @@ public class ExportImagePage extends WizardPage implements SelectionListener
         settingsGroup.setVisible(formatSettings.getChildren().length > 0);
         formatSettings.setVisible(true);
         settingsGroup.layout(true, true);
+    }
+
+    protected void validatePage()
+    {
+        ImageFormatProvider imageProvider = findImageProvider(formatField.getText());
+
+        boolean complete = false;
+        try
+        {
+            if (imageProvider.isValidExtension(fileNameField.getText()) == false)
+            {
+                setErrorMessage("File name has an invalid extension, please change it to '"
+                        + imageProvider.getDefaultExtension() + "'");
+                return;
+            }
+
+            setErrorMessage(null);
+            complete = true;
+        } finally
+        {
+            // Update page complete status
+            setPageComplete(complete);
+        }
     }
 }
