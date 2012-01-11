@@ -8,11 +8,9 @@ import org.eclipse.swt.widgets.Composite;
  */
 public interface IImageFormatProvider
 {
-
     /**
      * @param formatID is the ID of the format for which the settings are requested
-     * @return a {@link Composite} containing all settings of the format or null if no settings are present
+     * @param container is the container to place the format settings on to.
      */
-    Composite provideSettings(String formatID);
-
+    void provideSettings(String formatID, Composite container);
 }

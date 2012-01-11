@@ -7,9 +7,7 @@ import nl.utwente.ce.imageexport.IImageFormatProvider;
 public class ExportBitmap implements IImageFormatProvider
 {
     @Override
-    public Composite provideSettings(String formatID)
+    public void provideSettings(String formatID, Composite container)
     {
-        return null;
     }
-
 }

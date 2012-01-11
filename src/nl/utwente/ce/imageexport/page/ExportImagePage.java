@@ -1,31 +1,38 @@
 package nl.utwente.ce.imageexport.page;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.utwente.ce.imageexport.Activator;
 import nl.utwente.ce.imageexport.ImageFormatProvider;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class ExportImagePage extends WizardPage implements ModifyListener
+public class ExportImagePage extends WizardPage implements SelectionListener
 {
     static private final String EXPORTIMAGEPAGEID = "export-image-page";
 
     private Combo formatField;
 
-    private Text fileName;
+    private Text fileNameField;
+
+    private Group settingsGroup;
+
+    private Map<ImageFormatProvider, Composite> settingComposites;
 
     public ExportImagePage()
     {
@@ -42,6 +49,8 @@ public class ExportImagePage extends WizardPage implements ModifyListener
     @Override
     public void createControl(Composite parent)
     {
+        settingComposites = new HashMap<ImageFormatProvider, Composite>();
+
         Composite composite = new Composite(parent, SWT.NONE);
         {
             GridLayout layout = new GridLayout();
@@ -49,19 +58,12 @@ public class ExportImagePage extends WizardPage implements ModifyListener
             layout.verticalSpacing = 12;
             composite.setLayout(layout);
 
-            GridData data = new GridData();
-            data.verticalAlignment = GridData.FILL;
-            data.grabExcessVerticalSpace = true;
-            data.horizontalAlignment = GridData.FILL;
-            data.grabExcessHorizontalSpace = true;
-            composite.setLayoutData(data);
+            composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         }
         // Add Components
         // Image Format
         {
-            Label label = new Label(composite, SWT.LEFT);
-            label.setText("Image format:");
-
+            new Label(composite, SWT.LEFT).setText("Image format:");
             formatField = new Combo(composite, SWT.LEFT);
             List<String> availableFormats = new ArrayList<String>();
             for (ImageFormatProvider provider : Activator.getImageProviders())
@@ -69,52 +71,33 @@ public class ExportImagePage extends WizardPage implements ModifyListener
                 availableFormats.add(provider.getName());
             }
             formatField.setItems(availableFormats.toArray(new String[availableFormats.size()]));
-            formatField.addModifyListener(this);
+            formatField.addSelectionListener(this);
         }
 
         // Filename
         {
-            Label label = new Label(composite, SWT.LEFT);
-            label.setText("File name:");
+            new Label(composite, SWT.LEFT).setText("File name:");
+            Composite fileNamePanel = new Composite(composite, SWT.NONE);
+            fileNamePanel.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
+            fileNamePanel.setLayout(new GridLayout(2, false));
 
-            Composite panel = new Composite(composite, SWT.NONE);
-            {
-                GridData gridData = new GridData(GridData.FILL, GridData.END, true, false);
-                panel.setLayoutData(gridData);
-                panel.setLayout(new GridLayout(2, false));
-            }
-
-            fileName = new Text(panel, SWT.LEFT);
-            {
-                GridData gridData = new GridData(GridData.FILL, GridData.END, true, false);
-                fileName.setLayoutData(gridData);
-            }
-            Button browseButton = new Button(panel, SWT.LEFT);
+            fileNameField = new Text(fileNamePanel, SWT.LEFT);
+            fileNameField.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
+            Button browseButton = new Button(fileNamePanel, SWT.LEFT);
             browseButton.setText("Browse...");
         }
 
         // Settings
-        Group settings = new Group(composite, SWT.LEFT);
-        settings.setText("Settings");
-        GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
-        gridData.horizontalSpan = 2;
-        settings.setLayoutData(gridData);
+        settingsGroup = new Group(composite, SWT.NONE);
+        settingsGroup.setText("Settings");
+        settingsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+        settingsGroup.setLayout(new GridLayout());
+
+        // Update composite and its children
+        formatField.select(0);
+        formatChanged();
 
         setControl(composite);
-
-        if (Activator.getImageProviders().size() > 0)
-        {
-            formatField.select(0);
-        }
-    }
-
-    @Override
-    public void modifyText(ModifyEvent e)
-    {
-        if (e.getSource().equals(formatField))
-        {
-            fileName.setText("Image." + findImageProvider(formatField.getText()).getDefaultExtension());
-        }
     }
 
     /** @return the image provider with the given name */
@@ -128,5 +111,55 @@ public class ExportImagePage extends WizardPage implements ModifyListener
             }
         }
         return null;
+    }
+
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e)
+    {
+        widgetSelected(e);
+    }
+
+    @Override
+    public void widgetSelected(SelectionEvent e)
+    {
+        if (e.getSource().equals(formatField))
+        {
+            formatChanged();
+        }
+    }
+
+    /** Update the page for the currently selected image format */
+    protected void formatChanged()
+    {
+        ImageFormatProvider imageProvider = findImageProvider(formatField.getText());
+        if (imageProvider == null)
+        {
+            // Should not happen?
+            return;
+        }
+        fileNameField.setText("Image." + imageProvider.getDefaultExtension());
+
+        // Remove previous settings (if any)
+        for (Control child : settingsGroup.getChildren())
+        {
+            child.setVisible(false);
+        }
+
+        Composite formatSettings;
+        // Update settings for new selected format
+        if (settingComposites.containsKey(imageProvider))
+        {
+            formatSettings = settingComposites.get(imageProvider);
+        }
+        else
+        {
+            formatSettings = new Composite(settingsGroup, SWT.NONE);
+            imageProvider.getProvider().provideSettings(imageProvider.getID(), formatSettings);
+            settingComposites.put(imageProvider, formatSettings);
+        }
+
+        settingsGroup.setVisible(formatSettings.getChildren().length > 0);
+        formatSettings.setVisible(true);
+        settingsGroup.layout(true, true);
     }
 }
