@@ -1,5 +1,7 @@
 package nl.utwente.ce.imageexport.page;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -143,7 +145,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
     /** Update the page for the currently selected image format */
     protected void formatChanged()
     {
-        ImageFormatProvider imageProvider = findImageProvider(formatField.getText());
+        ImageFormatProvider imageProvider = getImageProvider();
         if (imageProvider == null)
         {
             // Should not happen?
@@ -177,15 +179,30 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
 
     protected void validatePage()
     {
-        ImageFormatProvider imageProvider = findImageProvider(formatField.getText());
+        ImageFormatProvider imageProvider = getImageProvider();
 
         boolean complete = false;
         try
         {
-            if (imageProvider.isValidExtension(fileNameField.getText()) == false)
+            String filename = fileNameField.getText();
+            if (imageProvider.isValidExtension(filename) == false)
             {
                 setErrorMessage("File name has an invalid extension, please change it to '"
                         + imageProvider.getDefaultExtension() + "'");
+                return;
+            }
+
+            File f = new File(filename);
+            try
+            {
+                f = f.getCanonicalFile();
+            } catch (IOException e)
+            {
+                // Could not make canonical... Keep using original filename
+            }
+            if (f.isAbsolute() == false)
+            {
+                setErrorMessage("Provide an absolute filename");
                 return;
             }
 
@@ -196,5 +213,16 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
             // Update page complete status
             setPageComplete(complete);
         }
+    }
+
+    /** @return the filename for the exported image */
+    public String getFilename()
+    {
+        return fileNameField.getText();
+    }
+
+    public ImageFormatProvider getImageProvider()
+    {
+        return findImageProvider(formatField.getText());
     }
 }
