@@ -23,6 +23,12 @@
             id="Bitmap.JPEG"
             name="JPEG Image">
       </image_format>
+      <image_format
+            class="nl.utwente.ce.imageexport.export.bitmap.ExportBitmap"
+            extensions="png"
+            id="Bitmap.PNG"
+            name="PNG Image">
+      </image_format>
    </extension>
 
 </plugin>

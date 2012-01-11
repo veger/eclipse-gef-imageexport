@@ -33,7 +33,12 @@ public class ExportBitmap implements IImageFormatProvider
         {
             format = SWT.IMAGE_JPEG;
         }
+        else if (formatID.equals("Bitmap.PNG"))
+        {
+            format = SWT.IMAGE_PNG;
+        }
         else
+
         {
             return; // Unknown format...?!
         }
