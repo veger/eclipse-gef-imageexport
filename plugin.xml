@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            category="org.eclipse.ui.Basic"
+            class="nl.utwente.ce.imageexport.ImageExportWizard"
+            id="nl.utwente.ce.imageexport.wizardID"
+            name="Export Image">
+         <description>
+            Export the current diagram or a part of it as an image
+         </description>
+      </wizard>
+   </extension>
+
+</plugin>
