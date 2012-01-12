@@ -151,7 +151,18 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
             // Should not happen?
             return;
         }
-        fileNameField.setText("Image." + imageProvider.getDefaultExtension());
+
+        // Update filename for new format
+        File f = new File("Image." + imageProvider.getDefaultExtension());
+        String filename;
+        try
+        {
+            filename = f.getCanonicalPath();
+        } catch (IOException e)
+        {
+            filename = f.getAbsolutePath();
+        }
+        fileNameField.setText(filename);
 
         // Remove previous settings (if any)
         for (Control child : settingsGroup.getChildren())
@@ -198,7 +209,8 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
                 f = f.getCanonicalFile();
             } catch (IOException e)
             {
-                // Could not make canonical... Keep using original filename
+                // Then settle with an absolute path
+                f = f.getAbsoluteFile();
             }
             if (f.isAbsolute() == false)
             {
