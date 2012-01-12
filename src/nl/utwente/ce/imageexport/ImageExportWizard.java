@@ -1,7 +1,6 @@
 package nl.utwente.ce.imageexport;
 
 import java.io.File;
-import java.io.IOException;
 
 import nl.utwente.ce.imageexport.page.ExportImagePage;
 
@@ -50,16 +49,7 @@ public class ImageExportWizard extends Wizard implements IExportWizard
             // Could not find a suitable (GEF based) viewer...
             return false;
         }
-        // Get filename and expand to canonical (or absolute) path
-        String filename = mainPage.getFilename();
-        File f = new File(filename);
-        try
-        {
-            filename = f.getCanonicalPath();
-        } catch (IOException e)
-        {
-            filename = f.getAbsolutePath();
-        }
+        String filename = Utils.sanitizePath(new File(mainPage.getFilename()));
         ImageFormatProvider imageProvider = mainPage.getImageProvider();
         imageProvider.getProvider().exportImage(imageProvider.getID(), filename, graphicalViewer);
 

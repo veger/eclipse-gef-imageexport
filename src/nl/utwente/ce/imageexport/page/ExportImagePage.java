@@ -9,6 +9,7 @@ import java.util.Map;
 
 import nl.utwente.ce.imageexport.Activator;
 import nl.utwente.ce.imageexport.ImageFormatProvider;
+import nl.utwente.ce.imageexport.Utils;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -153,16 +154,20 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         }
 
         // Update filename for new format
-        File f = new File("Image." + imageProvider.getDefaultExtension());
-        String filename;
-        try
+        String filename = fileNameField.getText();
+        if (filename.length() == 0)
         {
-            filename = f.getCanonicalPath();
-        } catch (IOException e)
-        {
-            filename = f.getAbsolutePath();
+            filename = "Image";
         }
-        fileNameField.setText(filename);
+        filename = Utils.sanitizePath(new File(filename));
+
+        // Add/replace extensions
+        int dot = filename.lastIndexOf('.');
+        if (dot != -1)
+        {
+            filename = filename.substring(0, dot);
+        }
+        fileNameField.setText(filename + "." + imageProvider.getDefaultExtension());
 
         // Remove previous settings (if any)
         for (Control child : settingsGroup.getChildren())
