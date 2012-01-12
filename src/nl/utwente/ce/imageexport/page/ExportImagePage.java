@@ -1,7 +1,6 @@
 package nl.utwente.ce.imageexport.page;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -208,15 +207,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
                 return;
             }
 
-            File f = new File(filename);
-            try
-            {
-                f = f.getCanonicalFile();
-            } catch (IOException e)
-            {
-                // Then settle with an absolute path
-                f = f.getAbsoluteFile();
-            }
+            File f = new File(Utils.sanitizePath(new File(filename)));
             if (f.isAbsolute() == false)
             {
                 setErrorMessage("Provide an absolute filename");
