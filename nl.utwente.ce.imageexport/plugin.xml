@@ -6,7 +6,7 @@
          point="org.eclipse.ui.exportWizards">
       <wizard
             category="org.eclipse.ui.Basic"
-            class="nl.utwente.ce.imageexport.ImageExportWizard"
+            class="nl.utwente.ce.imageexport.core.ImageExportWizard"
             id="nl.utwente.ce.imageexport.wizardID"
             name="Export Image">
          <description>

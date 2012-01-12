@@ -1,8 +1,10 @@
-package nl.utwente.ce.imageexport;
+package nl.utwente.ce.imageexport.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import nl.utwente.ce.imageexport.IImageFormatProvider;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;

@@ -1,7 +1,9 @@
-package nl.utwente.ce.imageexport;
+package nl.utwente.ce.imageexport.core;
 
 import java.util.Arrays;
 import java.util.List;
+
+import nl.utwente.ce.imageexport.IImageFormatProvider;
 
 /** Class that holds information of an image format provider */
 public class ImageFormatProvider

@@ -9,8 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import nl.utwente.ce.imageexport.Activator;
-import nl.utwente.ce.imageexport.ImageFormatProvider;
+import nl.utwente.ce.imageexport.core.Activator;
+import nl.utwente.ce.imageexport.core.ImageFormatProvider;
 import nl.utwente.ce.imageexport.Utils;
 
 import org.eclipse.jface.wizard.WizardPage;

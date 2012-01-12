@@ -1,7 +1,8 @@
-package nl.utwente.ce.imageexport;
+package nl.utwente.ce.imageexport.core;
 
 import java.io.File;
 
+import nl.utwente.ce.imageexport.Utils;
 import nl.utwente.ce.imageexport.page.ExportImagePage;
 
 import org.eclipse.gef.GraphicalViewer;
