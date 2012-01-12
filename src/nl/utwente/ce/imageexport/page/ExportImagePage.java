@@ -2,7 +2,10 @@ package nl.utwente.ce.imageexport.page;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +17,8 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -22,17 +27,20 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class ExportImagePage extends WizardPage implements SelectionListener, ModifyListener
+public class ExportImagePage extends WizardPage implements SelectionListener, ModifyListener, MouseListener
 {
     static private final String EXPORTIMAGEPAGEID = "export-image-page";
 
     private Combo formatField;
 
     private Text fileNameField;
+
+    private Button browseButton;
 
     private Group settingsGroup;
 
@@ -88,8 +96,9 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
             fileNameField = new Text(fileNamePanel, SWT.LEFT);
             fileNameField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
             fileNameField.addModifyListener(this);
-            Button browseButton = new Button(fileNamePanel, SWT.LEFT);
+            browseButton = new Button(fileNamePanel, SWT.LEFT);
             browseButton.setText("Browse...");
+            browseButton.addMouseListener(this);
         }
 
         // Settings
@@ -139,6 +148,25 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         if (e.getSource().equals(fileNameField))
         {
             validatePage();
+        }
+    }
+
+    @Override
+    public void mouseDoubleClick(MouseEvent e)
+    {
+    }
+
+    @Override
+    public void mouseDown(MouseEvent e)
+    {
+    }
+
+    @Override
+    public void mouseUp(MouseEvent e)
+    {
+        if (e.getSource() == browseButton)
+        {
+            browseFile();
         }
     }
 
@@ -223,6 +251,44 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         }
     }
 
+    /** Opens a {@link FileDiaglog} and updates {@link #fileNameField} if a new filename was pciket */
+    private void browseFile()
+    {
+        FileDialog fileDialog = new FileDialog(getShell(), SWT.SAVE);
+        File f = new File(Utils.sanitizePath(new File(fileNameField.getText())));
+        fileDialog.setFileName(f.getName());
+        fileDialog.setFilterPath(f.getParent());
+
+        // Create filter extension and name
+        ImageFormatProvider imageProvider = getImageProvider();
+        String filterExtension = createFilterExtension(Arrays.asList(imageProvider.getExtensions()));
+        fileDialog.setFilterExtensions(new String[] { filterExtension });
+        fileDialog.setFilterNames(new String[] { imageProvider.getName() });
+
+        String filename = fileDialog.open();
+        if (filename != null)
+        {
+            fileNameField.setText(filename);
+        }
+    }
+
+    /** @return the filter extensions like "*.ext1;*.ext2" */
+    public static String createFilterExtension(Collection<String> extensions)
+    {
+        if (extensions.isEmpty())
+        {
+            return ""; // Easy!
+        }
+        Iterator<String> iter = extensions.iterator();
+        StringBuilder buffer = new StringBuilder("*.");
+        buffer.append(iter.next());
+        while (iter.hasNext())
+        {
+            buffer.append(";*.").append(iter.next());
+        }
+        return buffer.toString();
+    }
+
     /** @return the filename for the exported image */
     public String getFilename()
     {
@@ -233,4 +299,5 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
     {
         return findImageProvider(formatField.getText());
     }
+
 }

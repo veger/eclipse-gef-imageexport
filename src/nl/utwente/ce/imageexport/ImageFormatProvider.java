@@ -34,6 +34,12 @@ public class ImageFormatProvider
         return extensions.get(0);
     }
 
+    /** @return all extensions associated with the image format */
+    public String[] getExtensions()
+    {
+        return (String[]) extensions.toArray();
+    }
+
     public IImageFormatProvider getProvider()
     {
         return provider;
@@ -42,8 +48,10 @@ public class ImageFormatProvider
     /** @return true if filename has one of the available extensions */
     public boolean isValidExtension(String filename)
     {
-        for(String extension: extensions) {
-            if(filename.endsWith(extension)) {
+        for (String extension : extensions)
+        {
+            if (filename.endsWith(extension))
+            {
                 return true;
             }
         }
