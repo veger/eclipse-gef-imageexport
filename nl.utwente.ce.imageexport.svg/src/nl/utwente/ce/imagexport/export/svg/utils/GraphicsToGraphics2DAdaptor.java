@@ -11,6 +11,8 @@
  *    		   uses GraphitiUiInternal.getWorkbenchService() instead of 
  *    		   GMF's DisplayUtils, does not implement the interface
  *    		   DrawableRenderedImage, since it is not needed.
+ *    Control Engineering - Remove/hide initial viewport/clipping area, 
+ *                          so all GEF diagrams fit
  *    			
  ****************************************************************************/
 
@@ -195,7 +197,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 
 	private Rectangle relativeClipRegion;
 
-	private org.eclipse.swt.graphics.Rectangle viewBox;
 	private Image image;
 
 	/**
@@ -208,21 +209,6 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 	private int transY = 0;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param graphics
-	 *            the <code>Graphics2D</code> object that this object is
-	 *            delegating calls to.
-	 * @param viewPort
-	 *            the <code>Rectangle</code> that defines the logical area being
-	 *            rendered by the graphics object.
-	 */
-	public GraphicsToGraphics2DAdaptor(Graphics2D graphics, Rectangle viewPort) {
-
-		this(graphics, new org.eclipse.swt.graphics.Rectangle(viewPort.x, viewPort.y, viewPort.width, viewPort.height));
-	}
-
-	/**
 	 * Alternate Constructor that takes an swt Rectangle
 	 * 
 	 * @param graphics
@@ -233,11 +219,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 	 *            defines the logical area being rendered by the graphics
 	 *            object.
 	 */
-	public GraphicsToGraphics2DAdaptor(Graphics2D graphics, org.eclipse.swt.graphics.Rectangle viewPort) {
-
-		// Save the ViewPort to add to the root DOM element
-		viewBox = viewPort;
-
+	public GraphicsToGraphics2DAdaptor(Graphics2D graphics) {
 		// Create the SWT Graphics Object
 		createSWTGraphics();
 
@@ -271,7 +253,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 	private void initSVGGraphics(Graphics2D graphics) {
 		this.graphics2D = graphics;
 
-		relativeClipRegion = new Rectangle(viewBox.x, viewBox.y, viewBox.width, viewBox.height);
+		relativeClipRegion = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
 		// Initialize the line style and width
 		stroke = new BasicStroke(swtGraphics.getLineWidth(), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 0, null, 0);
