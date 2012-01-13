@@ -3,6 +3,11 @@ package nl.utwente.ce.imageexport;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.draw2d.ConnectionLayer;
+import org.eclipse.draw2d.FreeformLayer;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Rectangle;
+
 /** Utility class for ImageExport and its plugins */
 public abstract class Utils
 {
@@ -26,5 +31,35 @@ public abstract class Utils
             filename = f.getAbsolutePath();
         }
         return filename;
+    }
+
+    /**
+     * Recursively (partly at least) finds the minimum bounds of the given figure by looking at the bounds of the sub
+     * figures
+     */
+    public static Rectangle getMinimumBounds(IFigure figure)
+    {
+        Rectangle minimumBounds = null;
+        for (Object layer : figure.getChildren())
+        {
+            Rectangle bounds;
+            if (layer instanceof FreeformLayer || layer instanceof ConnectionLayer)
+            {
+                bounds = getMinimumBounds((IFigure) layer);
+            }
+            else
+            {
+                bounds = ((IFigure) layer).getBounds();
+            }
+            if (minimumBounds == null)
+            {
+                minimumBounds = bounds;
+            }
+            else
+            {
+                minimumBounds.union(bounds);
+            }
+        }
+        return minimumBounds;
     }
 }

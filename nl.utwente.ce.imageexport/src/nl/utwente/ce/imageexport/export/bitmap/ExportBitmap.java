@@ -1,7 +1,5 @@
 package nl.utwente.ce.imageexport.export.bitmap;
 
-import org.eclipse.draw2d.ConnectionLayer;
-import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -17,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 import nl.utwente.ce.imageexport.IImageFormatProvider;
+import nl.utwente.ce.imageexport.Utils;
 
 public class ExportBitmap implements IImageFormatProvider
 {
@@ -46,12 +45,13 @@ public class ExportBitmap implements IImageFormatProvider
         LayerManager layerManager = (LayerManager) graphicalViewer.getEditPartRegistry().get(LayerManager.ID);
         IFigure rootFigure = layerManager.getLayer(LayerConstants.PRINTABLE_LAYERS);
 
-        Rectangle minimumBounds = getBounds(rootFigure);
+        Rectangle minimumBounds = Utils.getMinimumBounds(rootFigure);
 
         Image img = new Image(Display.getDefault(), minimumBounds.width, minimumBounds.height);
         GC gc = new GC(img);
 
         SWTGraphics swtGraphics = new SWTGraphics(gc);
+        // Reset origin to make it the top/left most part of the diagram
         swtGraphics.translate(minimumBounds.x * -1, minimumBounds.y * -1);
         rootFigure.paint(swtGraphics);
 
@@ -62,32 +62,5 @@ public class ExportBitmap implements IImageFormatProvider
         swtGraphics.dispose();
         gc.dispose();
         img.dispose();
-    }
-
-    /** Recursively (partly at least) finds the minimum bounds of the given figure */
-    private Rectangle getBounds(IFigure figure)
-    {
-        Rectangle minimumBounds = null;
-        for (Object layer : figure.getChildren())
-        {
-            Rectangle bounds;
-            if (layer instanceof FreeformLayer || layer instanceof ConnectionLayer)
-            {
-                bounds = getBounds((IFigure) layer);
-            }
-            else
-            {
-                bounds = ((IFigure) layer).getBounds();
-            }
-            if (minimumBounds == null)
-            {
-                minimumBounds = bounds;
-            }
-            else
-            {
-                minimumBounds.union(bounds);
-            }
-        }
-        return minimumBounds;
     }
 }
