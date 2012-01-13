@@ -6,6 +6,7 @@ import java.util.List;
 
 import nl.utwente.ce.imageexport.IImageFormatProvider;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -41,13 +42,20 @@ public class Activator extends AbstractUIPlugin
                 FORMATPROVIDEREXTENSION_ID);
         for (IConfigurationElement e : config)
         {
-            final Object o = e.createExecutableExtension("class");
-            if (o instanceof IImageFormatProvider)
+            try
             {
-                final String id = e.getAttribute("id");
-                final String name = e.getAttribute("name");
-                final String extensions = e.getAttribute("extensions");
-                imageProviders.add(new ImageFormatProvider(id, name, extensions, (IImageFormatProvider) o));
+                final Object o = e.createExecutableExtension("class");
+                if (o instanceof IImageFormatProvider)
+                {
+                    final String id = e.getAttribute("id");
+                    final String name = e.getAttribute("name");
+                    final String extensions = e.getAttribute("extensions");
+                    imageProviders.add(new ImageFormatProvider(id, name, extensions, (IImageFormatProvider) o));
+                }
+            } catch (CoreException exception)
+            {
+                // Could not activate extension: just ignore, so the other will be available..!
+                exception.printStackTrace();
             }
         }
         imageProviders = Collections.unmodifiableList(imageProviders);
