@@ -81,6 +81,9 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 		 */
 		public int translateY = 0;
 
+		/** Indicates whether clipping is active or not */
+		boolean clippingActive = false;
+		
 		/**
 		 * clipping rectangle x coordinate
 		 */
@@ -140,6 +143,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 			translateX = state.translateX;
 			translateY = state.translateY;
 
+			clippingActive = state.clippingActive;
+			
 			clipX = state.clipX;
 			clipY = state.clipY;
 			clipW = state.clipW;
@@ -195,7 +200,10 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 
 	private static final TextUtilities TEXT_UTILITIES = new TextUtilities();
 
-	private Rectangle relativeClipRegion;
+	/** Indicates that there is no active clipping area */
+	private static final Rectangle NOCLIPPING = new Rectangle();
+
+	private Rectangle relativeClipRegion = NOCLIPPING;
 
 	private Image image;
 
@@ -253,7 +261,7 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 	private void initSVGGraphics(Graphics2D graphics) {
 		this.graphics2D = graphics;
 
-		relativeClipRegion = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		relativeClipRegion = NOCLIPPING;
 
 		// Initialize the line style and width
 		stroke = new BasicStroke(swtGraphics.getLineWidth(), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 0, null, 0);
@@ -285,10 +293,16 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 		currentState.translateY = appliedState.translateY = transY;
 
 		// Initialize Clip Regions
-		currentState.clipX = appliedState.clipX = relativeClipRegion.x;
-		currentState.clipY = appliedState.clipY = relativeClipRegion.y;
-		currentState.clipW = appliedState.clipW = relativeClipRegion.width;
-		currentState.clipH = appliedState.clipH = relativeClipRegion.height;
+		if(relativeClipRegion.equals(NOCLIPPING)) {
+		    currentState.clippingActive = appliedState.clippingActive = false;
+		}
+		else
+		{
+		    currentState.clipX = appliedState.clipX = relativeClipRegion.x;
+		    currentState.clipY = appliedState.clipY = relativeClipRegion.y;
+		    currentState.clipW = appliedState.clipW = relativeClipRegion.width;
+		    currentState.clipH = appliedState.clipH = relativeClipRegion.height;
+		}
 
 		currentState.alpha = appliedState.alpha = getAlpha();
 
@@ -336,8 +350,13 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 	 */
 	@Override
 	public void clipRect(Rectangle rect) {
-		relativeClipRegion.intersect(rect);
-		setClipAbsolute(relativeClipRegion.x + transX, relativeClipRegion.y + transY, relativeClipRegion.width, relativeClipRegion.height);
+	    if(relativeClipRegion.equals(NOCLIPPING)) {
+	        setClipAbsolute(true, rect.x + transX, rect.y + transY, rect.width, rect.height);
+	    } else
+	    {
+	        relativeClipRegion.intersect(rect);
+	        setClipAbsolute(true, relativeClipRegion.x + transX, relativeClipRegion.y + transY, relativeClipRegion.width, relativeClipRegion.height);
+	    }
 	}
 
 	/*
@@ -799,7 +818,11 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 	 */
 	@Override
 	public Rectangle getClip(Rectangle rect) {
-		rect.setBounds(relativeClipRegion);
+	    if(!relativeClipRegion.equals(NOCLIPPING)) {
+	        rect.setBounds(relativeClipRegion);
+	    } else {
+	        rect.setBounds(0,  0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+	    }
 		return rect;
 	}
 
@@ -914,15 +937,22 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 		setLineAttributes(state.lineAttributes);
 		setXORMode(state.XorMode);
 
-		setClipAbsolute(state.clipX, state.clipY, state.clipW, state.clipH);
+		setClipAbsolute(state.clippingActive, state.clipX, state.clipY, state.clipW, state.clipH);
 
 		transX = currentState.translateX = state.translateX;
 		transY = currentState.translateY = state.translateY;
 
-		relativeClipRegion.x = state.clipX - transX;
-		relativeClipRegion.y = state.clipY - transY;
-		relativeClipRegion.width = state.clipW;
-		relativeClipRegion.height = state.clipH;
+		if(state.clippingActive) {
+		    if(relativeClipRegion.equals(NOCLIPPING)) {
+		        relativeClipRegion = new Rectangle();
+		    }
+		    relativeClipRegion.x = state.clipX - transX;
+		    relativeClipRegion.y = state.clipY - transY;
+		    relativeClipRegion.width = state.clipW;
+		    relativeClipRegion.height = state.clipH;
+		} else {
+		    relativeClipRegion = NOCLIPPING;
+		}
 
 		currentState.font = state.font;
 		currentState.alpha = state.alpha;
@@ -962,12 +992,16 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 	@Override
 	public void setClip(Rectangle rect) {
 
+	    if(relativeClipRegion.equals(NOCLIPPING)) {
+	        relativeClipRegion = new Rectangle();
+	    }
 		relativeClipRegion.x = rect.x;
 		relativeClipRegion.y = rect.y;
 		relativeClipRegion.width = rect.width;
 		relativeClipRegion.height = rect.height;
+		
 
-		setClipAbsolute(rect.x + transX, rect.y + transY, rect.width, rect.height);
+		setClipAbsolute(true, rect.x + transX, rect.y + transY, rect.width, rect.height);
 	}
 
 	/**
@@ -982,11 +1016,14 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 	 * @param height
 	 *            the height value
 	 */
-	private void setClipAbsolute(int x, int y, int width, int height) {
-		currentState.clipX = x;
-		currentState.clipY = y;
-		currentState.clipW = width;
-		currentState.clipH = height;
+	private void setClipAbsolute(boolean active, int x, int y, int width, int height) {
+	    currentState.clippingActive = active;
+	    if(active) {
+	        currentState.clipX = x;
+	        currentState.clipY = y;
+	        currentState.clipW = width;
+	        currentState.clipH = height;
+	    }
 	}
 
 	private boolean isFontUnderlined(Font f) {
@@ -1161,8 +1198,10 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 		swtGraphics.translate(dx, dy);
 
 		setTranslation(transX + dx, transY + dy);
-		relativeClipRegion.x -= dx;
-		relativeClipRegion.y -= dy;
+		if(!relativeClipRegion.equals(NOCLIPPING)) {
+		    relativeClipRegion.x -= dx;
+		    relativeClipRegion.y -= dy;
+		}
 	}
 
 	/**
@@ -1247,6 +1286,8 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 			appliedState.graphicHints ^= FILL_RULE_MASK;
 		}
 		getGraphics2D().setClip(createPathAWT(path));
+		// Note not tested
+		appliedState.clippingActive = currentState.clippingActive = false;
 		appliedState.clipX = currentState.clipX = 0;
 		appliedState.clipY = currentState.clipY = 0;
 		appliedState.clipW = currentState.clipW = 0;
@@ -1496,8 +1537,11 @@ public class GraphicsToGraphics2DAdaptor extends Graphics {
 			appliedState.graphicHints ^= FILL_RULE_MASK;
 		}
 		setClip(path);
-		getGraphics2D().clipRect(relativeClipRegion.x + transX, relativeClipRegion.y + transY, relativeClipRegion.width,
+		// Note not tested
+		if(!relativeClipRegion.equals(NOCLIPPING)) {
+		    getGraphics2D().clipRect(relativeClipRegion.x + transX, relativeClipRegion.y + transY, relativeClipRegion.width,
 				relativeClipRegion.height);
+		}
 		java.awt.Rectangle bounds = getGraphics2D().getClip().getBounds();
 		relativeClipRegion = new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
