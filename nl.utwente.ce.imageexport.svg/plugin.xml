@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         name="Bitmap Image Exporter"
+         point="nl.utwente.ce.imageexport.exportFormatProvider">
+      <image_format
+            class="nl.utwente.ce.imagexport.export.svg.ExportSVG"
+            extensions="svg"
+            id="SVG"
+            name="SVG Image">
+      </image_format>
+   </extension>
+
+</plugin>
