@@ -1,6 +1,6 @@
 package nl.utwente.ce.imageexport;
 
-import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -11,10 +11,10 @@ public interface IImageFormatProvider
 {
     /**
      * @param formatID is the ID of the format for which the settings are requested
-     * @param container is the container to place the format settings on to.
+     * @param figure is the figure to export
      */
     void provideSettings(String formatID, Composite container);
     
     /** Export the image */
-    void exportImage(String formatID, String filename, GraphicalViewer graphicalViewer);
+    void exportImage(String formatID, String filename, IFigure figure);
 }

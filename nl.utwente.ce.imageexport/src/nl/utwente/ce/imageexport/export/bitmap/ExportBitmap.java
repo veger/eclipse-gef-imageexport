@@ -3,9 +3,6 @@ package nl.utwente.ce.imageexport.export.bitmap;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.LayerConstants;
-import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -25,7 +22,7 @@ public class ExportBitmap implements IImageFormatProvider
     }
 
     @Override
-    public void exportImage(String formatID, String filename, GraphicalViewer graphicalViewer)
+    public void exportImage(String formatID, String filename, IFigure figure)
     {
         int format;
         if (formatID.equals("Bitmap.JPEG"))
@@ -42,10 +39,7 @@ public class ExportBitmap implements IImageFormatProvider
             return; // Unknown format...?!
         }
 
-        LayerManager layerManager = (LayerManager) graphicalViewer.getEditPartRegistry().get(LayerManager.ID);
-        IFigure rootFigure = layerManager.getLayer(LayerConstants.PRINTABLE_LAYERS);
-
-        Rectangle minimumBounds = Utils.getMinimumBounds(rootFigure);
+        Rectangle minimumBounds = Utils.getMinimumBounds(figure);
 
         Image img = new Image(Display.getDefault(), minimumBounds.width, minimumBounds.height);
         GC gc = new GC(img);
@@ -53,7 +47,7 @@ public class ExportBitmap implements IImageFormatProvider
         SWTGraphics swtGraphics = new SWTGraphics(gc);
         // Reset origin to make it the top/left most part of the diagram
         swtGraphics.translate(minimumBounds.x * -1, minimumBounds.y * -1);
-        rootFigure.paint(swtGraphics);
+        Utils.paintDiagram(swtGraphics, figure);
 
         ImageLoader imgLoader = new ImageLoader();
         imgLoader.data = new ImageData[] { img.getImageData() };

@@ -5,9 +5,6 @@ import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.LayerConstants;
-import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.swt.widgets.Composite;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -24,7 +21,7 @@ public class ExportSVG implements IImageFormatProvider
     }
 
     @Override
-    public void exportImage(String formatID, String filename, GraphicalViewer graphicalViewer)
+    public void exportImage(String formatID, String filename, IFigure figure)
     {
         DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
         String svgNS = "http://www.w3.org/2000/svg";
@@ -34,12 +31,10 @@ public class ExportSVG implements IImageFormatProvider
         // We need a converter from Draw2D.Graphics (GEF) to awt.Graphics2D (Batik)
         GraphicsToGraphics2DAdaptor graphicsAdaptor = new GraphicsToGraphics2DAdaptor(svgGenerator);
 
-        LayerManager layerManager = (LayerManager) graphicalViewer.getEditPartRegistry().get(LayerManager.ID);
-        IFigure rootFigure = layerManager.getLayer(LayerConstants.PRINTABLE_LAYERS);
-        Rectangle minimumBounds = Utils.getMinimumBounds(rootFigure).expand(4, 4);
+        Rectangle minimumBounds = Utils.getMinimumBounds(figure);
         // Reset origin to make it the top/left most part of the diagram
         graphicsAdaptor.translate(minimumBounds.x * -1, minimumBounds.y * -1);
-        rootFigure.paint(graphicsAdaptor);
+        Utils.paintDiagram(graphicsAdaptor, figure);
 
         try
         {

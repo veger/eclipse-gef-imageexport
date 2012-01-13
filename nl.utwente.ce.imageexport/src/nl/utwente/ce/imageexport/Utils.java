@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.FreeformLayer;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 
@@ -43,7 +44,7 @@ public abstract class Utils
         for (Object layer : figure.getChildren())
         {
             Rectangle bounds;
-            if (layer instanceof FreeformLayer || layer instanceof ConnectionLayer)
+            if (layer instanceof FreeformLayer)
             {
                 bounds = getMinimumBounds((IFigure) layer);
             }
@@ -60,6 +61,27 @@ public abstract class Utils
                 minimumBounds.union(bounds);
             }
         }
-        return minimumBounds;
+        // Add a padding of 2 pixels and return
+        return minimumBounds.expand(2, 2);
+    }
+
+    /** Paints the figure onto the given graphics */
+    public static void paintDiagram(Graphics g, IFigure figure)
+    {
+        // We want to ignore the first FreeformLayer (or we lose also all figure, as it draws the 'page boundaries'
+        // which is obviously not wanted in the exported images.
+        for (Object child : figure.getChildren())
+        {
+            // ConnectionLayer inherits from FreeformLayer, so rather checking for FreeformLayer we check whether child
+            // is not a ConnectionLayer!
+            if (child instanceof FreeformLayer && !(child instanceof ConnectionLayer))
+            {
+                paintDiagram(g, (IFigure) child);
+            }
+            else
+            {
+                ((IFigure) child).paint(g);
+            }
+        }
     }
 }
