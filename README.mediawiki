@@ -1,12 +1,12 @@
 __NOTOC__
 == Eclipse GEF Image Export Plugin ==
-This Eclipse plugin adds a entry in the Export Wizard (File ->rarr; Export ->rarr; General) to export images from GEF based editor diagrams.
+This Eclipse plugin adds a entry in the Export Wizard (File &rarr; Export &rarr; General) to export images from GEF based editor diagrams.
 
 == Using the plugin ==
 
 To export a GEF diagram:
 * Make sure that a GEF based editor is active
-* Open File ->rarr; Export ->rarr; General ->rarr; ImageExport
+* Open File &rarr; Export &rarr; General &rarr; ImageExport
 * Choose a filetype from the available image types (note: depending on the installed ImageExport plugins more type might be available)
 * Choose a location to save the image
 * Click Finish
