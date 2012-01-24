@@ -3,6 +3,7 @@
 	<name>nl.utwente.ce.imageexport.svg</name>
 	<comment></comment>
 	<projects>
+		<project>nl.utwente.ce.imageexport</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
