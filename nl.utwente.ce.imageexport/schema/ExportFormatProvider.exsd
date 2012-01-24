@@ -87,21 +87,27 @@ Place the preferred extension first, it will be used as default for the export i
       </complexType>
    </element>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="since"/>
-      </appinfo>
-      <documentation>
-         [Enter the first release in which this extension point appears.]
-      </documentation>
-   </annotation>
 
    <annotation>
       <appinfo>
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         [Enter extension point usage example here.]
+         The following is an example of an extension that provides a JPEG IamgeExport format:
+&lt;p&gt;
+&lt;pre&gt;
+&lt;extension
+      name=&quot;Bitmap Image Exporter&quot;
+      point=&quot;nl.utwente.ce.imageexport.exportFormatProvider&quot;&gt;
+   &lt;image_format
+      class=&quot;nl.utwente.ce.imageexport.export.bitmap.ExportBitmap&quot;
+      extensions=&quot;jpg,jpeg&quot;
+      id=&quot;Bitmap.JPEG&quot;
+      name=&quot;JPEG Image&quot;&gt;
+   &lt;/image_format&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -110,18 +116,10 @@ Place the preferred extension first, it will be used as default for the export i
          <meta.section type="apiinfo"/>
       </appinfo>
       <documentation>
-         [Enter API information here.]
+         The value of the class attribute must be a name of the class that implements nl.utwente.ce.imageexport.IImageFormatProvider
       </documentation>
    </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="implementation"/>
-      </appinfo>
-      <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
 
 
 </schema>
