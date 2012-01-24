@@ -1,0 +1,27 @@
+== Eclipse GEF Image Export Plugin ==
+This Eclipse plugin adds a entry in the Export Wizard (File -> Export -> General) to export images from GEF based editor diagrams.
+
+== Using the plugin ==
+
+To export a GEF diagram:
+* Make sure that a GEF based editor is active
+* Open File -> Export -> General -> ImageExport
+* Choose a filetype from the available image types (note: depending on the installed ImageExport plugins more type might be available)
+* Choose a location to save the image
+* Click Finish
+
+The exported image will (exactly) fit the contents of the editor, scaled at 100%.
+If larger images are required it is adviced to export as SVG (using the ImageExport.SVG plugin) and scale in another program to the desired scale. And eventually reexport to a bitmap if required.
+
+== Developer information ==
+To add new formats
+* Create a new plugin
+* In the plugin.xml editor add a nl.utwente.ce.imageexport.exportFormatProvider extension
+* Add a new iamge_format and fill in the required fields
+* The provided class should implement the [https://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/src/nl/utwente/ce/imageexport/IImageFormatProvider.java IImageFormatProvider] interface.
+
+The ImageExport.SVG should be easy enough to understand how this is done.
+To see how to reuse the exporting class for multiple formats, the: ImageExport plugin itself is a nice example as one class is used for both PNG and JPEG images.
+
+== License ==
+The ImageExport plugins are licensed under GPL v3. See LICENSE file for more information.
