@@ -29,9 +29,9 @@ If larger images are required it is adviced to export as SVG (using the ImageExp
 == Developer information ==
 To add new formats
 * Create a new plugin
-* In the plugin.xml editor add a [[http://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/schema/ExportFormatProvider.exsd nl.utwente.ce.imageexport.exportFormatProvider extension]]
+* In the plugin.xml editor add a [http://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/schema/ExportFormatProvider.exsd nl.utwente.ce.imageexport.exportFormatProvider extension]]
 * Add a new iamge_format and fill in the required fields
-* The provided class should implement the [http://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/src/nl/utwente/ce/imageexport/IImageFormatProvider.java IImageFormatProvider]]interface.
+* The provided class should implement the [http://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/src/nl/utwente/ce/imageexport/IImageFormatProvider.java IImageFormatProvider] interface.
 
 The ImageExport.SVG should be easy enough to understand how this is done.
 To see how to reuse the exporting class for multiple formats, the: ImageExport plugin itself is a nice example as one class is used for both PNG and JPEG images.
