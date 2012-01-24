@@ -3,8 +3,7 @@
       id="nl.utwente.ce.imageexport.svg.feature"
       label="Eclipse GEF ImageExport SVG Plugin"
       version="0.1.0"
-      provider-name="Control Engineering, University of Twente"
-      nl="en">
+      provider-name="Control Engineering, University of Twente">
 
    <description url="http://github.com/veger/eclipse-gef-exportimage/blob/master/README.mediawiki">
       This Eclipse plugin adds the SVG image format to the ImageExport
@@ -706,22 +705,21 @@ Public License instead of this License.  But first, please read
    </license>
 
    <url>
-      <update label="Eclipse GEF ImageExport Plugin" url="http://veger.github.com/eclipse-gef-imageexport/"/>
+      <update label="Eclipse GEF ImageExport" url="http://veger.github.com/eclipse-gef-imageexport/"/>
    </url>
 
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.7.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.gef" version="3.7.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="3.7.0" match="greaterOrEqual"/>
-      <import feature="nl.utwente.ce.imageexport.feature" version="0.0.0" match="compatible"/>
+      <import feature="nl.utwente.ce.imageexport.feature" version="0.1.0" match="compatible"/>
    </requires>
 
    <plugin
          id="nl.utwente.ce.imageexport.svg"
-         nl="en"
          download-size="0"
          install-size="0"
-         version="0.1.0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

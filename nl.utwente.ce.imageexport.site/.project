@@ -3,6 +3,8 @@
 	<name>nl.utwente.ce.imageexport.site</name>
 	<comment></comment>
 	<projects>
+		<project>nl.utwente.ce.imageexport.feature</project>
+		<project>nl.utwente.ce.imageexport.svg.feature</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
