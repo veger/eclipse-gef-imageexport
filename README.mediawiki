@@ -9,7 +9,7 @@ Follow these steps for easy installation:
 * Open ''Instal New Software'' dialog (Help &rarr; Install New Software...)
 * ''Add'' a new update site
 ** Fill in any ''name'' (eg ''ImageExport'')
-** Fill http://veger.github.com/eclipse-gef/imageexport in the ''location'' field
+** Fill http://veger.github.com/eclipse-gef-imageexport in the ''location'' field
 * Select the newly created location
 * Select at least ''Eclipse GEF ImageExport Plugin'' and eventually other plugin to get additional image formats
 * Finish the installation by clicking ''Next'' a couple of times (and accepting the license)
@@ -29,9 +29,9 @@ If larger images are required it is adviced to export as SVG (using the ImageExp
 == Developer information ==
 To add new formats
 * Create a new plugin
-* In the plugin.xml editor add a [http://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/schema/ExportFormatProvider.exsd nl.utwente.ce.imageexport.exportFormatProvider extension]]
+* In the plugin.xml editor add a [http://github.com/veger/eclipse-gef-imageexport/blob/master/nl.utwente.ce.imageexport/schema/ExportFormatProvider.exsd nl.utwente.ce.imageexport.exportFormatProvider extension]
 * Add a new iamge_format and fill in the required fields
-* The provided class should implement the [http://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/src/nl/utwente/ce/imageexport/IImageFormatProvider.java IImageFormatProvider] interface.
+* The provided class should implement the [http://github.com/veger/eclipse-gef-imageexport/blob/master/nl.utwente.ce.imageexport/src/nl/utwente/ce/imageexport/IImageFormatProvider.java IImageFormatProvider] interface.
 
 The ImageExport.SVG should be easy enough to understand how this is done.
 To see how to reuse the exporting class for multiple formats, the: ImageExport plugin itself is a nice example as one class is used for both PNG and JPEG images.
