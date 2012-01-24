@@ -1,11 +1,12 @@
+__NOTOC__
 == Eclipse GEF Image Export Plugin ==
-This Eclipse plugin adds a entry in the Export Wizard (File -> Export -> General) to export images from GEF based editor diagrams.
+This Eclipse plugin adds a entry in the Export Wizard (File ->rarr; Export ->rarr; General) to export images from GEF based editor diagrams.
 
 == Using the plugin ==
 
 To export a GEF diagram:
 * Make sure that a GEF based editor is active
-* Open File -> Export -> General -> ImageExport
+* Open File ->rarr; Export ->rarr; General ->rarr; ImageExport
 * Choose a filetype from the available image types (note: depending on the installed ImageExport plugins more type might be available)
 * Choose a location to save the image
 * Click Finish
@@ -16,12 +17,14 @@ If larger images are required it is adviced to export as SVG (using the ImageExp
 == Developer information ==
 To add new formats
 * Create a new plugin
-* In the plugin.xml editor add a nl.utwente.ce.imageexport.exportFormatProvider extension
+* In the plugin.xml editor add a [[http://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/schema/ExportFormatProvider.exsd nl.utwente.ce.imageexport.exportFormatProvider extension]
 * Add a new iamge_format and fill in the required fields
-* The provided class should implement the [https://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/src/nl/utwente/ce/imageexport/IImageFormatProvider.java IImageFormatProvider] interface.
+* The provided class should implement the [http://github.com/veger/eclipse-gef-exportimage/blob/master/nl.utwente.ce.imageexport/src/nl/utwente/ce/imageexport/IImageFormatProvider.java IImageFormatProvider] interface.
 
 The ImageExport.SVG should be easy enough to understand how this is done.
 To see how to reuse the exporting class for multiple formats, the: ImageExport plugin itself is a nice example as one class is used for both PNG and JPEG images.
+
+If you have added a new image format or improved one of the existing plugins, let me know and I am happy to add the improvements to this repository.
 
 == License ==
 The ImageExport plugins are licensed under GPL v3. See LICENSE file for more information.
