@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="Eclipse GEF ImageExport" url="http://veger.github.com/eclipse-gef-imageexport/">
+      This is the update site for the ImageExport plugin and the additional plugin to provide extra export image formats.
+   </description>
+   <feature url="features/nl.utwente.ce.imageexport.feature_0.0.0.jar" id="nl.utwente.ce.imageexport.feature" version="0.0.0" nl="en">
+      <category name="nl.utwente.ce.imageexport.feature.category"/>
+   </feature>
+   <feature url="features/nl.utwente.ce.imageexport.svg.feature_0.0.0.jar" id="nl.utwente.ce.imageexport.svg.feature" version="0.0.0" nl="en">
+      <category name="nl.utwente.ce.imageexport.feature.category"/>
+   </feature>
+   <category-def name="nl.utwente.ce.imageexport.feature.category" label="Image Export">
+      <description>
+         Core image export plugin and plugins providing extra export image formats.
+      </description>
+   </category-def>
+</site>
