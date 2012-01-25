@@ -2,7 +2,7 @@
 <feature
       id="nl.utwente.ce.imageexport.svg.feature"
       label="Eclipse GEF ImageExport SVG Plugin"
-      version="0.1.0"
+      version="0.1.1"
       provider-name="Control Engineering, University of Twente">
 
    <description url="http://github.com/veger/eclipse-gef-exportimage/blob/master/README.mediawiki">
@@ -706,6 +706,7 @@ Public License instead of this License.  But first, please read
 
    <url>
       <update label="Eclipse GEF ImageExport" url="http://veger.github.com/eclipse-gef-imageexport/"/>
+      <discovery label="Eclipse Batik" url="http://veger.github.com/eclipse-batik"/>
    </url>
 
    <requires>
@@ -713,13 +714,14 @@ Public License instead of this License.  But first, please read
       <import plugin="org.eclipse.gef" version="3.7.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="3.7.0" match="greaterOrEqual"/>
       <import feature="nl.utwente.ce.imageexport.feature" version="0.1.0" match="compatible"/>
+      <import plugin="org.apache.batik" version="1.7.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
          id="nl.utwente.ce.imageexport.svg"
          download-size="0"
          install-size="0"
-         version="0.1.0"
+         version="0.1.1"
          unpack="false"/>
 
 </feature>
