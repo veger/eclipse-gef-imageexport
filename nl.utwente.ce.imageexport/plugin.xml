@@ -7,6 +7,7 @@
       <wizard
             category="org.eclipse.ui.Basic"
             class="nl.utwente.ce.imageexport.core.ImageExportWizard"
+            icon="icons/export.png"
             id="nl.utwente.ce.imageexport.wizardID"
             name="Export Image">
          <description>
