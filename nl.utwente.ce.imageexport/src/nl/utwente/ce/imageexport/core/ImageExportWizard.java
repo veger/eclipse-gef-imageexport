@@ -62,8 +62,7 @@ public class ImageExportWizard extends Wizard implements IExportWizard
     @Override
     public boolean performFinish()
     {
-        IEditorPart editor = workbench.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        GraphicalViewer graphicalViewer = (GraphicalViewer) editor.getAdapter(GraphicalViewer.class);
+        GraphicalViewer graphicalViewer = getGraphicalViewer();
         if (graphicalViewer == null)
         {
             // Could not find a suitable (GEF based) viewer...
@@ -78,5 +77,17 @@ public class ImageExportWizard extends Wizard implements IExportWizard
         imageProvider.getProvider().exportImage(imageProvider.getID(), filename, rootFigure);
 
         return true;
+    }
+
+    /** @return the active graphical viewer, or null is there is not one present */
+    private GraphicalViewer getGraphicalViewer()
+    {
+        IEditorPart editor = workbench.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        if (editor == null)
+        {
+            // There is not active/open editor available...
+            return null;
+        }
+        return (GraphicalViewer) editor.getAdapter(GraphicalViewer.class);
     }
 }
