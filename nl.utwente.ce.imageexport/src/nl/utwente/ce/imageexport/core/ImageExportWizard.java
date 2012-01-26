@@ -54,7 +54,7 @@ public class ImageExportWizard extends Wizard implements IExportWizard
         if (mainPage == null)
         {
             // Keep between multiple exports (ie to keep the settings)
-            mainPage = new ExportImagePage();
+            mainPage = new ExportImagePage(getGraphicalViewer() != null);
         }
         addPage(mainPage);
     }

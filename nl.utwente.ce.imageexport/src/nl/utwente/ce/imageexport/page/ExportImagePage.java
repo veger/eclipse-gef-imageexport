@@ -52,6 +52,9 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
 {
     static private final String EXPORTIMAGEPAGEID = "export-image-page";
 
+    /** true when a suitable/active editor is available */
+    private final boolean hasActiveEditor;
+
     private Combo formatField;
 
     private Text fileNameField;
@@ -62,14 +65,15 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
 
     private Map<ImageFormatProvider, Composite> settingComposites;
 
-    public ExportImagePage()
+    public ExportImagePage(boolean hasActiveEditor)
     {
-        this(EXPORTIMAGEPAGEID);
+        this(EXPORTIMAGEPAGEID, hasActiveEditor);
     }
 
-    protected ExportImagePage(String name)
+    protected ExportImagePage(String name, boolean hasActiveEditor)
     {
         super(name);
+        this.hasActiveEditor = hasActiveEditor;
         setTitle("Export image");
         setDescription("Fill in the settings for the exported image");
     }
@@ -243,6 +247,12 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         boolean complete = false;
         try
         {
+            if (!hasActiveEditor)
+            {
+                setErrorMessage("There is not suitable/active editor available. Try again after you opened a GEF based editor and made it active.");
+                return;
+            }
+
             String filename = fileNameField.getText();
             if (imageProvider.isValidExtension(filename) == false)
             {
@@ -267,7 +277,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         }
     }
 
-    /** Opens a {@link FileDiaglog} and updates {@link #fileNameField} if a new filename was pciket */
+    /** Opens a {@link FileDiaglog} and updates {@link #fileNameField} if a new filename was picked */
     private void browseFile()
     {
         FileDialog fileDialog = new FileDialog(getShell(), SWT.SAVE);
