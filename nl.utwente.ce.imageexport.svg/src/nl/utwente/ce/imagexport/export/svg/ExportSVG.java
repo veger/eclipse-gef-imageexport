@@ -48,9 +48,12 @@ public class ExportSVG implements IImageFormatProvider
         GraphicsToGraphics2DAdaptor graphicsAdaptor = new GraphicsToGraphics2DAdaptor(svgGenerator);
 
         Rectangle minimumBounds = Utils.getMinimumBounds(figure);
-        // Reset origin to make it the top/left most part of the diagram
-        graphicsAdaptor.translate(minimumBounds.x * -1, minimumBounds.y * -1);
-        Utils.paintDiagram(graphicsAdaptor, figure);
+        if (minimumBounds != null)
+        {
+            // Reset origin to make it the top/left most part of the diagram
+            graphicsAdaptor.translate(minimumBounds.x * -1, minimumBounds.y * -1);
+            Utils.paintDiagram(graphicsAdaptor, figure);
+        }
 
         try
         {
