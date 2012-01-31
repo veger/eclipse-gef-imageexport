@@ -18,9 +18,12 @@ package nl.utwente.ce.imageexport.core;
 
 import java.io.File;
 
+import nl.utwente.ce.imageexport.ExceptionErrorDialog;
 import nl.utwente.ce.imageexport.Utils;
 import nl.utwente.ce.imageexport.page.ExportImagePage;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
@@ -62,20 +65,28 @@ public class ImageExportWizard extends Wizard implements IExportWizard
     @Override
     public boolean performFinish()
     {
-        GraphicalViewer graphicalViewer = getGraphicalViewer();
-        if (graphicalViewer == null)
+        try
         {
-            // Could not find a suitable (GEF based) viewer...
+            GraphicalViewer graphicalViewer = getGraphicalViewer();
+            if (graphicalViewer == null)
+            {
+                // Could not find a suitable (GEF based) viewer...
+                return false;
+            }
+            LayerManager layerManager = (LayerManager) graphicalViewer.getEditPartRegistry().get(LayerManager.ID);
+            IFigure rootFigure = layerManager.getLayer(LayerConstants.PRINTABLE_LAYERS);
+
+            String filename = Utils.sanitizePath(new File(mainPage.getFilename()));
+            ImageFormatProvider imageProvider = mainPage.getImageProvider();
+
+            imageProvider.getProvider().exportImage(imageProvider.getID(), filename, rootFigure);
+        } catch (Exception e)
+        {
+            IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                    "An error occurred during exporting the image", e);
+            ExceptionErrorDialog.openError(getShell(), "Image export error", null, status);
             return false;
         }
-        LayerManager layerManager = (LayerManager) graphicalViewer.getEditPartRegistry().get(LayerManager.ID);
-        IFigure rootFigure = layerManager.getLayer(LayerConstants.PRINTABLE_LAYERS);
-
-        String filename = Utils.sanitizePath(new File(mainPage.getFilename()));
-        ImageFormatProvider imageProvider = mainPage.getImageProvider();
-
-        imageProvider.getProvider().exportImage(imageProvider.getID(), filename, rootFigure);
-
         return true;
     }
 
