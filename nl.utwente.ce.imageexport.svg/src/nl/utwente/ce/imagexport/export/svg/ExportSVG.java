@@ -37,7 +37,7 @@ public class ExportSVG implements IImageFormatProvider
     }
 
     @Override
-    public void exportImage(String formatID, String filename, IFigure figure)
+    public void exportImage(String formatID, String filename, IFigure figure) throws SVGGraphics2DIOException
     {
         DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
         String svgNS = "http://www.w3.org/2000/svg";
@@ -55,12 +55,6 @@ public class ExportSVG implements IImageFormatProvider
             Utils.paintDiagram(graphicsAdaptor, figure);
         }
 
-        try
-        {
-            svgGenerator.stream(filename);
-        } catch (SVGGraphics2DIOException e)
-        {
-            // TODO Something went wrong, we probably want to alert the user...
-        }
+        svgGenerator.stream(filename);
     }
 }

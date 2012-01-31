@@ -80,10 +80,10 @@ public class ImageExportWizard extends Wizard implements IExportWizard
             ImageFormatProvider imageProvider = mainPage.getImageProvider();
 
             imageProvider.getProvider().exportImage(imageProvider.getID(), filename, rootFigure);
-        } catch (Exception e)
+        } catch (Throwable t)
         {
             IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "An error occurred during exporting the image", e);
+                    "An error occurred during exporting the image", t);
             ExceptionErrorDialog.openError(getShell(), "Image export error", null, status);
             return false;
         }

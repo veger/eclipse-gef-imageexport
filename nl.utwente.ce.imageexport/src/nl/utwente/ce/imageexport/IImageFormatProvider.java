@@ -32,5 +32,5 @@ public interface IImageFormatProvider
     void provideSettings(String formatID, Composite container);
 
     /** Export the image */
-    void exportImage(String formatID, String filename, IFigure figure);
+    void exportImage(String formatID, String filename, IFigure figure) throws Throwable;
 }
