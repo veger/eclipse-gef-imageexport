@@ -4,6 +4,9 @@ This Eclipse plugin adds a entry in the Export Wizard (File &rarr; Export &rarr;
 
 == Installation ==
 
+The imageexport.svg plugin needs the [http://github.com/veger/eclipse-batik Batik library] to be installed.
+So if you need the SVG export functionality, be sure to install this library first, as this is not done automatically yet (see [https://github.com/veger/eclipse-gef-imageexport/issues/1 issue #1])
+
 An update site is provided to the install the imageexport plugin.
 Follow these steps for easy installation:
 * Open ''Instal New Software'' dialog (Help &rarr; Install New Software...)
