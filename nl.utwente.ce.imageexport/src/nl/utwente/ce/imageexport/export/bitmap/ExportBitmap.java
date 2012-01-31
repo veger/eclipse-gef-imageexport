@@ -56,14 +56,24 @@ public class ExportBitmap implements IImageFormatProvider
         }
 
         Rectangle minimumBounds = Utils.getMinimumBounds(figure);
-
-        Image img = new Image(Display.getDefault(), minimumBounds.width, minimumBounds.height);
+        Image img;
+        if (minimumBounds == null)
+        {
+            img = new Image(Display.getDefault(), 10, 10);
+        }
+        else
+        {
+            img = new Image(Display.getDefault(), minimumBounds.width, minimumBounds.height);
+        }
         GC gc = new GC(img);
 
         SWTGraphics swtGraphics = new SWTGraphics(gc);
-        // Reset origin to make it the top/left most part of the diagram
-        swtGraphics.translate(minimumBounds.x * -1, minimumBounds.y * -1);
-        Utils.paintDiagram(swtGraphics, figure);
+        if (minimumBounds != null)
+        {
+            // Reset origin to make it the top/left most part of the diagram
+            swtGraphics.translate(minimumBounds.x * -1, minimumBounds.y * -1);
+            Utils.paintDiagram(swtGraphics, figure);
+        }
 
         ImageLoader imgLoader = new ImageLoader();
         imgLoader.data = new ImageData[] { img.getImageData() };
