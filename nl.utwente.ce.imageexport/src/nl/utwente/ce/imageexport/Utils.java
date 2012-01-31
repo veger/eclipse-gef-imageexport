@@ -77,8 +77,13 @@ public abstract class Utils
                 minimumBounds.union(bounds);
             }
         }
-        // Add a padding of 2 pixels and return
-        return minimumBounds.expand(2, 2);
+        if (minimumBounds != null)
+        {
+            // Add a padding of 2 pixels and return
+            minimumBounds.expand(2, 2);
+        }
+
+        return minimumBounds;
     }
 
     /** Paints the figure onto the given graphics */
