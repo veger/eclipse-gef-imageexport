@@ -2,7 +2,7 @@
 <feature
       id="nl.utwente.ce.imageexport.svg.feature"
       label="Eclipse GEF ImageExport SVG Plugin"
-      version="0.1.1"
+      version="0.1.2"
       provider-name="Control Engineering, University of Twente">
 
    <description url="http://github.com/veger/eclipse-gef-exportimage/blob/master/README.mediawiki">
@@ -721,7 +721,7 @@ Public License instead of this License.  But first, please read
          id="nl.utwente.ce.imageexport.svg"
          download-size="0"
          install-size="0"
-         version="0.1.1"
+         version="0.1.2"
          unpack="false"/>
 
 </feature>
