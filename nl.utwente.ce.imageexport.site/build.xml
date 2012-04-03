@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="main">
+	<target name="main">
+		<!-- Initialize settings -->
+		<property name="repo.name" value="Eclipse GEF ImageExport" />
+		<property name="buildDirectoryRel" value="output" />
+		<property name="imageExportDirectoryRel" value="${buildDirectoryRel}/imageexport" />
+
+		<!-- Initialize builder variables -->
+		<property name="buildDirectory" value="${basedir}/${buildDirectoryRel}" />
+		<property name="imageExportDirectory" value="${basedir}/${imageExportDirectoryRel}" />
+		<property name="p2.artifact.repo.name" value="${repo.name}" />
+		<property name="p2.metadata.repo.name" value="${repo.name}" />
+
+		<!-- Delete old build dir -->
+		<delete dir="${buildDirectoryRel}" />
+
+		<!-- Note: This task runs in 'parallel', as this is handled by Eclipse and not the ant build script -->
+		<pde.exportFeatures destination="${imageExportDirectoryRel}" exportSource="false" exportType="directory" features="nl.utwente.ce.imageexport.feature,nl.utwente.ce.imageexport.svg.feature" useJARFormat="true" />
+
+		<!-- Create the repository (update site) -->
+		<eclipse.publish.featuresAndBundles repository="file:/${imageExportDirectory}" compress="true" category="file:/${basedir}/category.xml">
+			<bundles dir="../nl.utwente.ce.imageexport" />
+			<bundles dir="../nl.utwente.ce.imageexport.svg" />
+			<features dir="../nl.utwente.ce.imageexport.feature" />
+			<features dir="../nl.utwente.ce.imageexport.svg.feature" />
+		</eclipse.publish.featuresAndBundles>
+
+		<!-- Create a composite repository including our and the the Batik repository,
+		     so the Batik plugin is found and installed automatically (if required) -->
+		<p2.composite.repository>
+			<repository location="file:/${buildDirectory}/" name="${repo.name}" />
+			<add>
+				<repository location="imageexport" />
+				<repository location="http://veger.github.com/eclipse-batik" />
+			</add>
+		</p2.composite.repository>
+
+		<echo message="Please wait until the Eclipse 'PDE Export' task is finished as well...${line.separator}" />
+	</target>
+</project>

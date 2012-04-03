@@ -3,17 +3,5 @@
 	<name>nl.utwente.ce.imageexport.site</name>
 	<comment></comment>
 	<projects>
-		<project>nl.utwente.ce.imageexport.feature</project>
-		<project>nl.utwente.ce.imageexport.svg.feature</project>
 	</projects>
-	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.pde.UpdateSiteBuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-	</buildSpec>
-	<natures>
-		<nature>org.eclipse.pde.UpdateSiteNature</nature>
-	</natures>
 </projectDescription>
