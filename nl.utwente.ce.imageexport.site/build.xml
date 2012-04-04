@@ -15,16 +15,19 @@
 		<!-- Delete old build dir -->
 		<delete dir="${buildDirectoryRel}" />
 
-		<!-- Note: This task runs in 'parallel', as this is handled by Eclipse and not the ant build script -->
-		<pde.exportFeatures destination="${imageExportDirectoryRel}" exportSource="false" exportType="directory" features="nl.utwente.ce.imageexport.feature,nl.utwente.ce.imageexport.svg.feature" useJARFormat="true" />
-
 		<!-- Create the repository (update site) -->
-		<eclipse.publish.featuresAndBundles repository="file:/${imageExportDirectory}" compress="true" category="file:/${basedir}/category.xml">
-			<bundles dir="../nl.utwente.ce.imageexport" />
-			<bundles dir="../nl.utwente.ce.imageexport.svg" />
-			<features dir="../nl.utwente.ce.imageexport.feature" />
-			<features dir="../nl.utwente.ce.imageexport.svg.feature" />
+		<eclipse.publish.featuresAndBundles repository="file:/${basedir}/tmp" compress="true" category="file:/${basedir}/category.xml">
+			<bundles dir="${basedir}/..">
+				<include name="nl.utwente.ce.imageexport" />
+				<include name="nl.utwente.ce.imageexport.svg" />
+			</bundles>
+			<features dir="${basedir}/..">
+				<include name="nl.utwente.ce.imageexport.feature" />
+				<include name="nl.utwente.ce.imageexport.svg.feature" />
+			</features>
 		</eclipse.publish.featuresAndBundles>
+		<!-- When using ${imageExportDirectory} directly, the plugins and features directories are not generated... -->
+		<move file="${basedir}/tmp" tofile="${imageExportDirectory}" />
 
 		<!-- Create a composite repository including our and the the Batik repository,
 		     so the Batik plugin is found and installed automatically (if required) -->
@@ -35,7 +38,5 @@
 				<repository location="http://veger.github.com/eclipse-batik" />
 			</add>
 		</p2.composite.repository>
-
-		<echo message="Please wait until the Eclipse 'PDE Export' task is finished as well...${line.separator}" />
 	</target>
 </project>
