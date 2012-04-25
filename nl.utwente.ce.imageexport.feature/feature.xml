@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="nl.utwente.ce.imageexport.feature"
+      id="nl.utwente.ce.imageexport"
       label="Eclipse GEF ImageExport Plugin"
-      version="0.1.3"
+      version="0.1.4"
       provider-name="Control Engineering, University of Twente">
 
    <description url="http://github.com/veger/eclipse-gef-exportimage/blob/master/README.mediawiki">
