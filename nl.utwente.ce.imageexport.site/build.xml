@@ -1,38 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="main">
-	<target name="main">
-		<!-- Initialize settings -->
-		<property name="repo.name" value="Eclipse GEF ImageExport" />
-		<property name="buildDirectoryRel" value="output" />
-		<property name="imageExportDirectoryRel" value="${buildDirectoryRel}/imageexport" />
+	<property file="build.properties" />
+	<target name="main" depends="init">
+		<antcall target="build-feature">
+			<param name="feature" value="imageexport" />
+		</antcall>
+		<antcall target="build-feature">
+			<param name="feature" value="imageexport.svg" />
+		</antcall>
+		<!-- Update this property when another feature is build last! -->
+		<property name="last-feature" value="imageexport.svg" />
 
-		<!-- Initialize builder variables -->
-		<property name="buildDirectory" value="${basedir}/${buildDirectoryRel}" />
-		<property name="imageExportDirectory" value="${basedir}/${imageExportDirectoryRel}" />
-		<property name="p2.artifact.repo.name" value="${repo.name}" />
-		<property name="p2.metadata.repo.name" value="${repo.name}" />
+		<antcall target="gather-results" />
+		
+		<echo message="The compilation logs can be found in ${buildDirectory}/${buildLabel}/compilelogs" />
+	</target>
 
-		<!-- Delete old build dir -->
-		<delete dir="${buildDirectoryRel}" />
+	<target name="build-feature">
+		<echo>Building nl.utwente.ce.${feature} feature</echo>
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}">
+			<property name="topLevelElementType" value="feature" />
+			<property name="topLevelElementId" value="nl.utwente.ce.${feature}" />
+			<property name="pluginPath" value="${additionalPluginPath}" />
+			<property name="baseLocation" value="${eclipse.home}" />
+			<property name="archivePrefix" value="imageexport-${feature}" />
+		</ant>
+	</target>
 
-		<!-- Create the repository (update site) -->
-		<eclipse.publish.featuresAndBundles repository="file:/${basedir}/tmp" compress="true" category="file:/${basedir}/category.xml">
-			<bundles dir="${basedir}/..">
-				<include name="nl.utwente.ce.imageexport" />
-				<include name="nl.utwente.ce.imageexport.svg" />
-			</bundles>
-			<features dir="${basedir}/..">
-				<include name="nl.utwente.ce.imageexport.feature" />
-				<include name="nl.utwente.ce.imageexport.svg.feature" />
-			</features>
-		</eclipse.publish.featuresAndBundles>
-		<!-- When using ${imageExportDirectory} directly, the plugins and features directories are not generated... -->
-		<move file="${basedir}/tmp" tofile="${imageExportDirectory}" />
+	<target name="init">
+		<!-- Clean build directory -->
+		<delete dir="${buildDirectory}" />
+		<mkdir dir="${buildDirectory}" />
+		<!-- Copy all plugins and features into the build directory -->
+		<copy todir="${buildDirectory}/plugins">
+			<fileset dir="${basedir}/..">
+				<include name="nl.utwente.ce.imageexport/**" />
+				<include name="nl.utwente.ce.imageexport.svg/**" />
+				<exclude name="*/bin/**" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/features">
+			<fileset dir="${basedir}/..">
+				<include name="nl.utwente.ce.imageexport.feature/**" />
+				<include name="nl.utwente.ce.imageexport.svg.feature/**" />
+			</fileset>
+		</copy>
+	</target>
 
+	<target name="gather-results">
+		<!-- Clean update-site directory -->
+		<delete dir="${outputDirectory}/update-site" />
+		<mkdir dir="${outputDirectory}/update-site/imageexport" />
+		<!-- Unzip update-site -->
+		<unzip src="${buildDirectory}/${buildLabel}/nl.utwente.ce.${last-feature}-${buildId}-group.group.group.zip" dest="${outputDirectory}/update-site/imageexport" overwrite="true" />
+		
 		<!-- Create a composite repository including our and the the Batik repository,
 		     so the Batik plugin is found and installed automatically (if required) -->
 		<p2.composite.repository>
-			<repository location="file:/${buildDirectory}/" name="${repo.name}" />
+			<repository location="${outputDirectory}/update-site" name="${repo.name}" />
 			<add>
 				<repository location="imageexport" />
 				<repository location="http://veger.github.com/eclipse-batik" />

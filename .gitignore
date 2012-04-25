@@ -1,3 +1,5 @@
 bin
 *.jar
 .metadata
+nl.utwente.ce.imageexport.site/build
+nl.utwente.ce.imageexport.site/output
