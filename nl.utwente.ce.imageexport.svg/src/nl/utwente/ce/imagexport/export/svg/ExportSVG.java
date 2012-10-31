@@ -21,6 +21,7 @@ import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -33,6 +34,11 @@ public class ExportSVG implements IImageFormatProvider
 {
     @Override
     public void provideSettings(String formatID, Composite container)
+    {
+    }
+    
+    @Override
+    public void storeSettings(IPreferenceStore store)
     {
     }
 

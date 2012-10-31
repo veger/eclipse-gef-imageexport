@@ -19,6 +19,7 @@ package nl.utwente.ce.imageexport.export.bitmap;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -34,6 +35,11 @@ public class ExportBitmap implements IImageFormatProvider
 {
     @Override
     public void provideSettings(String formatID, Composite container)
+    {
+    }
+
+    @Override
+    public void storeSettings(IPreferenceStore store)
     {
     }
 

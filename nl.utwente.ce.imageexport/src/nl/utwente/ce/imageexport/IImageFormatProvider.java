@@ -17,6 +17,7 @@
 package nl.utwente.ce.imageexport;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -30,6 +31,12 @@ public interface IImageFormatProvider
      * @param figure is the figure to export
      */
     void provideSettings(String formatID, Composite container);
+
+    /**
+     * Store the settings that are specific for this image provider
+     * @param store is the {@link IPreferenceStore} to store the preferences into
+     */
+    void storeSettings(IPreferenceStore store);
 
     /** Export the image */
     void exportImage(String formatID, String filename, IFigure figure) throws Throwable;
