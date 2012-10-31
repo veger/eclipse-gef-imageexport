@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Image export plugin
+Bundle-Name: Image export
 Bundle-SymbolicName: nl.utwente.ce.imageexport;singleton:=true
 Bundle-Version: 0.2.0
 Bundle-Vendor: Control Engineering, University of Twente
