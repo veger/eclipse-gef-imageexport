@@ -27,8 +27,10 @@ import java.util.Map;
 
 import nl.utwente.ce.imageexport.core.Activator;
 import nl.utwente.ce.imageexport.core.ImageFormatProvider;
+import nl.utwente.ce.imageexport.core.PreferenceConstants;
 import nl.utwente.ce.imageexport.Utils;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -104,6 +106,14 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
             }
             formatField.setItems(availableFormats.toArray(new String[availableFormats.size()]));
             formatField.addSelectionListener(this);
+
+            String imageFormatPreference = Activator.getPreferences().getString(PreferenceConstants.EXPORT_FORMAT);
+            int index = availableFormats.indexOf(imageFormatPreference);
+            if (index != -1)
+            {
+                // Select format stored in preferences
+                formatField.select(index);
+            }
         }
 
         // Filename
@@ -128,7 +138,6 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         settingsGroup.setLayout(new GridLayout());
 
         // Update composite and its children
-        formatField.select(0);
         formatChanged();
 
         setControl(composite);
@@ -326,4 +335,11 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         return findImageProvider(formatField.getText());
     }
 
+    /** Store the preferences of the page, so they can be used as default values the next time */
+    public void storePreferences()
+    {
+        IPreferenceStore store = Activator.getPreferences();
+        store.setValue(PreferenceConstants.EXPORT_FORMAT, formatField.getText());
+        // TODO Let the current image provides also store its preferences
+    }
 }

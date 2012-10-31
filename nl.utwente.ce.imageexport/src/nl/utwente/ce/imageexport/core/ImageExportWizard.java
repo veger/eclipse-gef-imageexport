@@ -80,6 +80,9 @@ public class ImageExportWizard extends Wizard implements IExportWizard
             ImageFormatProvider imageProvider = mainPage.getImageProvider();
 
             imageProvider.getProvider().exportImage(imageProvider.getID(), filename, rootFigure);
+
+            // Export went ok, so store preferences
+            mainPage.storePreferences();
         } catch (Throwable t)
         {
             IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,

@@ -25,6 +25,7 @@ import nl.utwente.ce.imageexport.IImageFormatProvider;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -95,5 +96,11 @@ public class Activator extends AbstractUIPlugin
     public static List<ImageFormatProvider> getImageProviders()
     {
         return imageProviders;
+    }
+    
+    /** @return the preference store of this plug-in */
+    public static IPreferenceStore getPreferences()
+    {
+        return getDefault().getPreferenceStore();
     }
 }

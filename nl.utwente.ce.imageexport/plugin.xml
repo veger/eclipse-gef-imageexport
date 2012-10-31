@@ -3,6 +3,12 @@
 <plugin>
    <extension-point id="nl.utwente.ce.imageexport.exportFormatProvider" name="Format Provider" schema="schema/ExportFormatProvider.exsd"/>
    <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="nl.utwente.ce.imageexport.core.PreferencesInitializer">
+      </initializer>
+   </extension>
+   <extension
          point="org.eclipse.ui.exportWizards">
       <wizard
             category="org.eclipse.ui.Basic"
