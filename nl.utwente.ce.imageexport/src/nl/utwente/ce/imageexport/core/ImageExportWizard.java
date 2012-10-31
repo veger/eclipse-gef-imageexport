@@ -30,8 +30,10 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IExportWizard;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbench;
 
 public class ImageExportWizard extends Wizard implements IExportWizard
@@ -58,6 +60,18 @@ public class ImageExportWizard extends Wizard implements IExportWizard
         {
             // Keep between multiple exports (ie to keep the settings)
             mainPage = new ExportImagePage(getGraphicalViewer() != null);
+        }
+
+        // Update default path
+        final IEditorPart activeEditor = getActiveEditor();
+        if (activeEditor != null)
+        {
+            IEditorInput input = activeEditor.getEditorInput();
+            if (input instanceof IFileEditorInput)
+            {
+                String filePath = ((IFileEditorInput) input).getFile().getRawLocation().toString();
+                mainPage.setDefaultPath(filePath);
+            }
         }
         addPage(mainPage);
     }
@@ -96,12 +110,17 @@ public class ImageExportWizard extends Wizard implements IExportWizard
     /** @return the active graphical viewer, or null is there is not one present */
     private GraphicalViewer getGraphicalViewer()
     {
-        IEditorPart editor = workbench.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        IEditorPart editor = getActiveEditor();
         if (editor == null)
         {
             // There is not active/open editor available...
             return null;
         }
         return (GraphicalViewer) editor.getAdapter(GraphicalViewer.class);
+    }
+
+    private IEditorPart getActiveEditor()
+    {
+        return workbench.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
     }
 }

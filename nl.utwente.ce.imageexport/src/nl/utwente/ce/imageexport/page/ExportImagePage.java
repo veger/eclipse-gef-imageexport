@@ -57,6 +57,9 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
     /** true when a suitable/active editor is available */
     private final boolean hasActiveEditor;
 
+    /** Default file path of the input file of the active editor, or an empty string if not available */
+    private String defaultFilePath = "";
+
     private Combo formatField;
 
     private Text fileNameField;
@@ -78,6 +81,11 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         this.hasActiveEditor = hasActiveEditor;
         setTitle("Export image");
         setDescription("Fill in the settings for the exported image");
+    }
+
+    public void setDefaultPath(String path)
+    {
+        defaultFilePath = path;
     }
 
     @Override
@@ -124,6 +132,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
             fileNamePanel.setLayout(new GridLayout(2, false));
 
             fileNameField = new Text(fileNamePanel, SWT.LEFT);
+            fileNameField.setText(defaultFilePath);
             fileNameField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
             fileNameField.addModifyListener(this);
             browseButton = new Button(fileNamePanel, SWT.LEFT);
@@ -268,6 +277,11 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
                 setErrorMessage("File name has an invalid extension, please change it to '"
                         + imageProvider.getDefaultExtension() + "'");
                 return;
+            }
+
+            if ("".equals(filename))
+            {
+
             }
 
             File f = new File(Utils.sanitizePath(new File(filename)));
