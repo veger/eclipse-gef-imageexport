@@ -36,7 +36,7 @@ public interface IImageFormatProvider
      * Store the settings that are specific for this image provider
      * @param store is the {@link IPreferenceStore} to store the preferences into
      */
-    void storeSettings(IPreferenceStore store);
+    void storePreferences(IPreferenceStore store);
 
     /** Export the image */
     void exportImage(String formatID, String filename, IFigure figure) throws Throwable;

@@ -38,7 +38,7 @@ public class ExportSVG implements IImageFormatProvider
     }
     
     @Override
-    public void storeSettings(IPreferenceStore store)
+    public void storePreferences(IPreferenceStore store)
     {
     }
 

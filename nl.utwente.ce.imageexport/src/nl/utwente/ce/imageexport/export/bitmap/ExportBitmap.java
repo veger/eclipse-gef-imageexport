@@ -39,7 +39,7 @@ public class ExportBitmap implements IImageFormatProvider
     }
 
     @Override
-    public void storeSettings(IPreferenceStore store)
+    public void storePreferences(IPreferenceStore store)
     {
     }
 

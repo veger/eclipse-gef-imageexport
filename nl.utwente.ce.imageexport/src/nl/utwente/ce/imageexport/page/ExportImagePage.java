@@ -375,6 +375,6 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         // so a next time Eclipse is started, it default to the project again
         store.setDefault(PreferenceConstants.EXPORT_FILENAME, getFilename());
 
-        // TODO Let the current image provides also store its preferences
+        getImageProvider().getProvider().storePreferences(store);
     }
 }
