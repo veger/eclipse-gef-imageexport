@@ -26,5 +26,6 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer
     {
         IPreferenceStore store = Activator.getPreferences();
         store.setDefault(PreferenceConstants.EXPORT_FORMAT, "PNG Image");
+        store.setDefault(PreferenceConstants.EXPORT_FILENAME, "");
     }
 }

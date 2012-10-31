@@ -25,4 +25,7 @@ public class PreferenceConstants
 
     /** Export image format preference */
     public static final String EXPORT_FORMAT = "export format";
+
+    /** Default file name (path). Note: it is not stored in the preferences store */
+    public static final String EXPORT_FILENAME = "export filename";
 }

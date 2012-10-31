@@ -132,7 +132,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
             fileNamePanel.setLayout(new GridLayout(2, false));
 
             fileNameField = new Text(fileNamePanel, SWT.LEFT);
-            fileNameField.setText(defaultFilePath);
+            fileNameField.setText(getDefaultFilename());
             fileNameField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
             fileNameField.addModifyListener(this);
             browseButton = new Button(fileNamePanel, SWT.LEFT);
@@ -258,6 +258,23 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         settingsGroup.layout(true, true);
     }
 
+    private String getDefaultFilename()
+    {
+        String filename = Activator.getPreferences().getString(PreferenceConstants.EXPORT_FILENAME);
+        if ("".equals(filename))
+        {
+            filename = defaultFilePath;
+        }
+        else
+        {
+            // Use editors file name
+            String name = new File(defaultFilePath).getName();
+            filename = new File(filename).getParent() + File.separator + name;
+        }
+
+        return filename;
+    }
+
     protected void validatePage()
     {
         ImageFormatProvider imageProvider = getImageProvider();
@@ -354,6 +371,10 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
     {
         IPreferenceStore store = Activator.getPreferences();
         store.setValue(PreferenceConstants.EXPORT_FORMAT, formatField.getText());
+        // Do not store, but update default,
+        // so a next time Eclipse is started, it default to the project again
+        store.setDefault(PreferenceConstants.EXPORT_FILENAME, getFilename());
+
         // TODO Let the current image provides also store its preferences
     }
 }
