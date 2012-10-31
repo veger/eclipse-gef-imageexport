@@ -70,7 +70,7 @@ public abstract class Utils
             }
             if (minimumBounds == null)
             {
-                minimumBounds = bounds;
+                minimumBounds = new Rectangle(bounds);
             }
             else
             {
