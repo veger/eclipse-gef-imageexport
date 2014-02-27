@@ -2,7 +2,7 @@
 <feature
       id="nl.utwente.ce.imageexport"
       label="GEF ImageExport"
-      version="0.2.0"
+      version="0.2.0.1"
       provider-name="Robotics and Mechatronics, University of Twente">
 
    <description url="http://github.com/veger/eclipse-gef-exportimage/blob/master/README.mediawiki">
