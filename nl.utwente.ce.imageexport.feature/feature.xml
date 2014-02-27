@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="nl.utwente.ce.imageexport"
-      label="Eclipse GEF ImageExport Plugin"
+      label="GEF ImageExport"
       version="0.2.0"
-      provider-name="Control Engineering, University of Twente">
+      provider-name="Robotics and Mechatronics, University of Twente">
 
    <description url="http://github.com/veger/eclipse-gef-exportimage/blob/master/README.mediawiki">
       This Eclipse plugin adds a entry in the Export Wizard (File -&gt; Export -&gt; General) to export images from GEF based editor diagrams.

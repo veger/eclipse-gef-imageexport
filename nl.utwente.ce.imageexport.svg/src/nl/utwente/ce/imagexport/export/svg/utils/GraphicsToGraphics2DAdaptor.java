@@ -11,8 +11,7 @@
  *    		   uses GraphitiUiInternal.getWorkbenchService() instead of 
  *    		   GMF's DisplayUtils, does not implement the interface
  *    		   DrawableRenderedImage, since it is not needed.
- *    Control Engineering - Remove/hide initial viewport/clipping area, 
- *                          so all GEF diagrams fit
+ *    RaM - Remove/hide initial viewport/clipping area, so all GEF diagrams fit
  *    			
  ****************************************************************************/
 

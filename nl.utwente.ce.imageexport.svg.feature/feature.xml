@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="nl.utwente.ce.imageexport.svg"
-      label="Eclipse GEF ImageExport SVG Plugin"
+      label="GEF ImageExport SVG Plugin"
       version="0.1.5"
-      provider-name="Control Engineering, University of Twente">
+      provider-name="Robotics and Mechatronics, University of Twente">
 
    <description url="http://github.com/veger/eclipse-gef-exportimage/blob/master/README.mediawiki">
       This Eclipse plugin adds the SVG image format to the ImageExport
