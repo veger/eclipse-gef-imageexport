@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature url="features/nl.utwente.ce.imageexport_0.1.4.jar" id="nl.utwente.ce.imageexport" version="0.1.4">
-      <category name="nl.utwente.ce.iamgeexport.category"/>
+      <category name="nl.utwente.ce.imageexport.category"/>
    </feature>
    <feature url="features/nl.utwente.ce.imageexport.svg_0.1.4.jar" id="nl.utwente.ce.imageexport.svg" version="0.1.4">
-      <category name="nl.utwente.ce.iamgeexport.category"/>
+      <category name="nl.utwente.ce.imageexport.category"/>
    </feature>
-   <category-def name="nl.utwente.ce.iamgeexport.category" label="Image Export"/>
+   <category-def name="nl.utwente.ce.imageexport.category" label="Image Export"/>
 </site>

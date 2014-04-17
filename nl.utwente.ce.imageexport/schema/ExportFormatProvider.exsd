@@ -52,7 +52,7 @@
          <attribute name="id" type="string">
             <annotation>
                <documentation>
-                  Id of the current format, used to identify to the iamge format provide which format is active (useful when multiple formats are provided by the same class)
+                  Id of the current format, used to identify to the image format provide which format is active (useful when multiple formats are provided by the same class)
                </documentation>
             </annotation>
          </attribute>
@@ -69,7 +69,7 @@
          <attribute name="extensions" type="string" use="required">
             <annotation>
                <documentation>
-                  Comma separated list of file extensions that are associated with the iamge format.
+                  Comma separated list of file extensions that are associated with the image format.
 Place the preferred extension first, it will be used as default for the export image filename.
                </documentation>
             </annotation>
