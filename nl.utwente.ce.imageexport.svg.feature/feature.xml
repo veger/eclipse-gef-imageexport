@@ -6,8 +6,7 @@
       provider-name="Robotics and Mechatronics, University of Twente">
 
    <description url="http://github.com/veger/eclipse-gef-exportimage/blob/master/README.mediawiki">
-      This Eclipse plugin adds the SVG image format to the ImageExport
-plugin.
+      This Eclipse plugin adds the SVG image format to the ImageExport plugin.
 The new format can be found at the ImageExport wizard (File -&gt; Export -&gt; General -&gt; Image Export)
    </description>
 
