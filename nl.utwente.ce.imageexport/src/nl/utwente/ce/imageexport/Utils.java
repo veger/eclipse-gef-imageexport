@@ -19,10 +19,11 @@ package nl.utwente.ce.imageexport;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IClippingStrategy;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 /** Utility class for ImageExport and its plugins */
@@ -89,20 +90,57 @@ public abstract class Utils
     /** Paints the figure onto the given graphics */
     public static void paintDiagram(Graphics g, IFigure figure)
     {
-        // We want to ignore the first FreeformLayer (or we lose also all figure, as it draws the 'page boundaries'
-        // which is obviously not wanted in the exported images.
-        for (Object child : figure.getChildren())
+        // Store state, so modified state of Graphics (while painting children) can be easily restored
+        g.pushState();
+        try
         {
-            // ConnectionLayer inherits from FreeformLayer, so rather checking for FreeformLayer we check whether child
-            // is not a ConnectionLayer!
-            if (child instanceof FreeformLayer && !(child instanceof ConnectionLayer))
+            IClippingStrategy clippingStrategy = figure.getClippingStrategy();
+
+            // Iterate over the children to check whether a child is a(nother) layer or an actual figure
+            // Not painting the layers themselves is likely to get rid of borders and graphics settings that are not
+            // supported (like Graphics#setTextAntiAliassing())
+            for (Object childObject : figure.getChildren())
             {
-                paintDiagram(g, (IFigure) child);
+                if (childObject instanceof Layer)
+                {
+                    // Found another layer, process it to search for actual figures
+                    paintDiagram(g, (IFigure) childObject);
+                }
+                else
+                {
+                    // Found something to draw
+                    // Use same/similar method as being using in Figure#paintChildren() in order to get clipping right
+                    IFigure child = (IFigure) childObject;
+                    if (child.isVisible())
+                    {
+                        // determine clipping areas for child
+                        Rectangle[] clipping = null;
+                        if (clippingStrategy != null)
+                        {
+                            clipping = clippingStrategy.getClip(child);
+                        }
+                        else
+                        {
+                            // default clipping behaviour is to clip at bounds
+                            clipping = new Rectangle[] { child.getBounds() };
+                        }
+                        // child may now paint inside the clipping areas
+                        for (int j = 0; j < clipping.length; j++)
+                        {
+                            if (clipping[j].intersects(g.getClip(Rectangle.SINGLETON)))
+                            {
+                                g.clipRect(clipping[j]);
+                                child.paint(g);
+                                g.restoreState();
+                            }
+                        }
+                    }
+                }
             }
-            else
-            {
-                ((IFigure) child).paint(g);
-            }
+        } finally
+        {
+            // Always pop the state again to prevent problems
+            g.popState();
         }
     }
 }
