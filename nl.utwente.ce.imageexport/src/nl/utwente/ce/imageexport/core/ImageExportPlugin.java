@@ -29,25 +29,20 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends AbstractUIPlugin
+/** Class to control the plug-in life cycle */
+public class ImageExportPlugin extends AbstractUIPlugin
 {
     /** The plug-in ID */
     public static final String PLUGIN_ID = "nl.utwente.ce.imageexport";
 
-    /** The plug-in ID */
+    /** The format provider extension point ID */
     public static final String FORMATPROVIDEREXTENSION_ID = "nl.utwente.ce.imageexport.exportFormatProvider";
 
     /** The shared instance */
-    private static Activator plugin;
+    private static ImageExportPlugin plugin;
 
+    /** List of available image providers */
     private static List<ImageFormatProvider> imageProviders;
-
-    public Activator()
-    {
-    }
 
     public void start(BundleContext context) throws Exception
     {
@@ -87,7 +82,7 @@ public class Activator extends AbstractUIPlugin
     }
 
     /** @return the shared instance */
-    public static Activator getDefault()
+    public static ImageExportPlugin getDefault()
     {
         return plugin;
     }

@@ -99,7 +99,7 @@ public class ImageExportWizard extends Wizard implements IExportWizard
             mainPage.storePreferences();
         } catch (Throwable t)
         {
-            IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+            IStatus status = new Status(IStatus.ERROR, ImageExportPlugin.PLUGIN_ID,
                     "An error occurred during exporting the image", t);
             ExceptionErrorDialog.openError(getShell(), "Image export error", null, status);
             return false;

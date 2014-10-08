@@ -24,7 +24,7 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer
     @Override
     public void initializeDefaultPreferences()
     {
-        IPreferenceStore store = Activator.getPreferences();
+        IPreferenceStore store = ImageExportPlugin.getPreferences();
         store.setDefault(PreferenceConstants.EXPORT_FORMAT, "PNG Image");
         store.setDefault(PreferenceConstants.EXPORT_FILENAME, "");
     }

@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import nl.utwente.ce.imageexport.core.Activator;
+import nl.utwente.ce.imageexport.core.ImageExportPlugin;
 import nl.utwente.ce.imageexport.core.ImageFormatProvider;
 import nl.utwente.ce.imageexport.core.PreferenceConstants;
 import nl.utwente.ce.imageexport.Utils;
@@ -108,14 +108,14 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
             new Label(composite, SWT.LEFT).setText("Image format:");
             formatField = new Combo(composite, SWT.LEFT);
             List<String> availableFormats = new ArrayList<String>();
-            for (ImageFormatProvider provider : Activator.getImageProviders())
+            for (ImageFormatProvider provider : ImageExportPlugin.getImageProviders())
             {
                 availableFormats.add(provider.getName());
             }
             formatField.setItems(availableFormats.toArray(new String[availableFormats.size()]));
             formatField.addSelectionListener(this);
 
-            String imageFormatPreference = Activator.getPreferences().getString(PreferenceConstants.EXPORT_FORMAT);
+            String imageFormatPreference = ImageExportPlugin.getPreferences().getString(PreferenceConstants.EXPORT_FORMAT);
             int index = availableFormats.indexOf(imageFormatPreference);
             if (index != -1)
             {
@@ -155,7 +155,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
     /** @return the image provider with the given name */
     public static ImageFormatProvider findImageProvider(String name)
     {
-        for (ImageFormatProvider provider : Activator.getImageProviders())
+        for (ImageFormatProvider provider : ImageExportPlugin.getImageProviders())
         {
             if (provider.getName().equals(name))
             {
@@ -250,7 +250,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         {
             formatSettings = new Composite(settingsGroup, SWT.NONE);
             imageProvider.getProvider().provideSettings(imageProvider.getID(), formatSettings,
-                    Activator.getPreferences());
+                    ImageExportPlugin.getPreferences());
             settingComposites.put(imageProvider, formatSettings);
         }
 
@@ -261,7 +261,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
 
     private String getDefaultFilename()
     {
-        String filename = Activator.getPreferences().getString(PreferenceConstants.EXPORT_FILENAME);
+        String filename = ImageExportPlugin.getPreferences().getString(PreferenceConstants.EXPORT_FILENAME);
         if ("".equals(filename))
         {
             filename = defaultFilePath;
@@ -370,7 +370,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
     /** Store the preferences of the page, so they can be used as default values the next time */
     public void storePreferences()
     {
-        IPreferenceStore store = Activator.getPreferences();
+        IPreferenceStore store = ImageExportPlugin.getPreferences();
         store.setValue(PreferenceConstants.EXPORT_FORMAT, formatField.getText());
         // Do not store, but update default,
         // so a next time Eclipse is started, it default to the project again
