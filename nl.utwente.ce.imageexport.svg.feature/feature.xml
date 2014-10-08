@@ -2,7 +2,7 @@
 <feature
       id="nl.utwente.ce.imageexport.svg"
       label="GEF ImageExport SVG Plugin"
-      version="0.1.5.1"
+      version="0.2.0"
       provider-name="Robotics and Mechatronics, University of Twente">
 
    <description url="http://github.com/veger/eclipse-gef-exportimage/blob/master/README.mediawiki">
