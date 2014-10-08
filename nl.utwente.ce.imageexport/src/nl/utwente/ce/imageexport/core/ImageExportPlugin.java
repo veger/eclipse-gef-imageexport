@@ -42,35 +42,11 @@ public class ImageExportPlugin extends AbstractUIPlugin
     private static ImageExportPlugin plugin;
 
     /** List of available image providers */
-    private static List<ImageFormatProvider> imageProviders;
+    private List<ImageFormatProvider> imageProviders;
 
     public void start(BundleContext context) throws Exception
     {
         super.start(context);
-
-        // Find available exporting format providers
-        imageProviders = new ArrayList<ImageFormatProvider>();
-        IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(
-                FORMATPROVIDEREXTENSION_ID);
-        for (IConfigurationElement e : config)
-        {
-            try
-            {
-                final Object o = e.createExecutableExtension("class");
-                if (o instanceof IImageFormatProvider)
-                {
-                    final String id = e.getAttribute("id");
-                    final String name = e.getAttribute("name");
-                    final String extensions = e.getAttribute("extensions");
-                    imageProviders.add(new ImageFormatProvider(id, name, extensions, (IImageFormatProvider) o));
-                }
-            } catch (CoreException exception)
-            {
-                // Could not activate extension: just ignore, so the other will be available..!
-                exception.printStackTrace();
-            }
-        }
-        imageProviders = Collections.unmodifiableList(imageProviders);
         plugin = this;
     }
 
@@ -88,11 +64,37 @@ public class ImageExportPlugin extends AbstractUIPlugin
     }
 
     /** @return a list of {@link IImageFormatProviders} that are available to export images */
-    public static List<ImageFormatProvider> getImageProviders()
+    public List<ImageFormatProvider> getImageProviders()
     {
+        if (imageProviders == null)
+        {
+            // Find available exporting format providers
+            imageProviders = new ArrayList<ImageFormatProvider>();
+            IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(
+                    FORMATPROVIDEREXTENSION_ID);
+            for (IConfigurationElement element : elements)
+            {
+                try
+                {
+                    Object o = element.createExecutableExtension("class");
+                    if (o instanceof IImageFormatProvider)
+                    {
+                        final String id = element.getAttribute("id");
+                        final String name = element.getAttribute("name");
+                        final String extensions = element.getAttribute("extensions");
+                        imageProviders.add(new ImageFormatProvider(id, name, extensions, (IImageFormatProvider) o));
+                    }
+                } catch (CoreException exception)
+                {
+                    // Could not activate extension: just ignore, so the other will be available..!
+                    exception.printStackTrace();
+                }
+            }
+            imageProviders = Collections.unmodifiableList(imageProviders);
+        }
         return imageProviders;
     }
-    
+
     /** @return the preference store of this plug-in */
     public static IPreferenceStore getPreferences()
     {

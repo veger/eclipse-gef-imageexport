@@ -108,14 +108,15 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
             new Label(composite, SWT.LEFT).setText("Image format:");
             formatField = new Combo(composite, SWT.LEFT);
             List<String> availableFormats = new ArrayList<String>();
-            for (ImageFormatProvider provider : ImageExportPlugin.getImageProviders())
+            for (ImageFormatProvider provider : ImageExportPlugin.getDefault().getImageProviders())
             {
                 availableFormats.add(provider.getName());
             }
             formatField.setItems(availableFormats.toArray(new String[availableFormats.size()]));
             formatField.addSelectionListener(this);
 
-            String imageFormatPreference = ImageExportPlugin.getPreferences().getString(PreferenceConstants.EXPORT_FORMAT);
+            String imageFormatPreference = ImageExportPlugin.getPreferences().getString(
+                    PreferenceConstants.EXPORT_FORMAT);
             int index = availableFormats.indexOf(imageFormatPreference);
             if (index != -1)
             {
@@ -155,7 +156,7 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
     /** @return the image provider with the given name */
     public static ImageFormatProvider findImageProvider(String name)
     {
-        for (ImageFormatProvider provider : ImageExportPlugin.getImageProviders())
+        for (ImageFormatProvider provider : ImageExportPlugin.getDefault().getImageProviders())
         {
             if (provider.getName().equals(name))
             {
