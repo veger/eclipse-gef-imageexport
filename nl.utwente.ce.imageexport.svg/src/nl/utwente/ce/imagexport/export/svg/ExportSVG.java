@@ -19,9 +19,14 @@ package nl.utwente.ce.imagexport.export.svg;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -29,17 +34,31 @@ import org.w3c.dom.Document;
 import nl.utwente.ce.imageexport.IImageFormatProvider;
 import nl.utwente.ce.imageexport.Utils;
 import nl.utwente.ce.imagexport.export.svg.utils.GraphicsToGraphics2DAdaptor;
+import nl.utwente.ce.imagexport.export.svg.utils.NoClippingGraphics;
 
 public class ExportSVG implements IImageFormatProvider
 {
+    private Button disableClippingButton;
+
     @Override
     public void provideSettings(String formatID, Composite container, IPreferenceStore store)
     {
+        container.setLayout(new GridLayout());
+
+        disableClippingButton = new Button(container, SWT.CHECK);
+        disableClippingButton.setText("Disable clipping regions");
+        disableClippingButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+        disableClippingButton.setSelection(store.getBoolean(PreferenceConstants.SVG_DISABLE_CLIPPING));
+        disableClippingButton
+                .setToolTipText("Disabling clipping reduces the complexity and size of the exported SVG image.\n\n"
+                        + "Use at own risk! Most (properly) designed figures do not require clipping as they do not wrongly paint outside their 'boundaries'.");
+
     }
 
     @Override
     public void storePreferences(IPreferenceStore store)
     {
+        store.setValue(PreferenceConstants.SVG_DISABLE_CLIPPING, disableClippingButton.getSelection());
     }
 
     @Override
@@ -51,14 +70,24 @@ public class ExportSVG implements IImageFormatProvider
         SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 
         // We need a converter from Draw2D.Graphics (GEF) to awt.Graphics2D (Batik)
-        GraphicsToGraphics2DAdaptor graphicsAdaptor = new GraphicsToGraphics2DAdaptor(svgGenerator);
+        Graphics graphics;
+        if (disableClippingButton.getSelection())
+        {
+            // Use a no clipping adapter
+            graphics = new NoClippingGraphics(svgGenerator);
+        }
+        else
+        {
+            // Use regular adapter
+            graphics = new GraphicsToGraphics2DAdaptor(svgGenerator);
+        }
 
         Rectangle minimumBounds = Utils.getMinimumBounds(figure);
         if (minimumBounds != null)
         {
             // Reset origin to make it the top/left most part of the diagram
-            graphicsAdaptor.translate(minimumBounds.x * -1, minimumBounds.y * -1);
-            Utils.paintDiagram(graphicsAdaptor, figure);
+            graphics.translate(minimumBounds.x * -1, minimumBounds.y * -1);
+            Utils.paintDiagram(graphics, figure);
         }
 
         svgGenerator.stream(filename);
