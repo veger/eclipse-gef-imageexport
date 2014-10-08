@@ -25,11 +25,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import nl.utwente.ce.imageexport.ExceptionErrorDialog;
+import nl.utwente.ce.imageexport.Utils;
 import nl.utwente.ce.imageexport.core.ImageExportPlugin;
 import nl.utwente.ce.imageexport.core.ImageFormatProvider;
 import nl.utwente.ce.imageexport.core.PreferenceConstants;
-import nl.utwente.ce.imageexport.Utils;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -45,6 +47,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -107,21 +110,27 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         {
             new Label(composite, SWT.LEFT).setText("Image format:");
             formatField = new Combo(composite, SWT.LEFT);
-            List<String> availableFormats = new ArrayList<String>();
-            for (ImageFormatProvider provider : ImageExportPlugin.getDefault().getImageProviders())
-            {
-                availableFormats.add(provider.getName());
-            }
-            formatField.setItems(availableFormats.toArray(new String[availableFormats.size()]));
             formatField.addSelectionListener(this);
-
-            String imageFormatPreference = ImageExportPlugin.getPreferences().getString(
-                    PreferenceConstants.EXPORT_FORMAT);
-            int index = availableFormats.indexOf(imageFormatPreference);
-            if (index != -1)
+            try
             {
-                // Select format stored in preferences
-                formatField.select(index);
+                List<String> availableFormats = new ArrayList<String>();
+                for (ImageFormatProvider provider : ImageExportPlugin.getDefault().getImageProviders())
+                {
+                    availableFormats.add(provider.getName());
+                }
+                formatField.setItems(availableFormats.toArray(new String[availableFormats.size()]));
+                String imageFormatPreference = ImageExportPlugin.getPreferences().getString(
+                        PreferenceConstants.EXPORT_FORMAT);
+                int index = availableFormats.indexOf(imageFormatPreference);
+                if (index != -1)
+                {
+                    // Select format stored in preferences
+                    formatField.select(index);
+                }
+            } catch (CoreException e)
+            {
+                ExceptionErrorDialog.openError(getShell(), "Image export error",
+                        "Unable to obtain the available image formats", e.getStatus());
             }
         }
 
@@ -154,14 +163,28 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
     }
 
     /** @return the image provider with the given name */
-    public static ImageFormatProvider findImageProvider(String name)
+    public static ImageFormatProvider findImageProvider(final String name)
     {
-        for (ImageFormatProvider provider : ImageExportPlugin.getDefault().getImageProviders())
+        try
         {
-            if (provider.getName().equals(name))
+            for (ImageFormatProvider provider : ImageExportPlugin.getDefault().getImageProviders())
             {
-                return provider;
+                if (provider.getName().equals(name))
+                {
+                    return provider;
+                }
             }
+        } catch (final CoreException e)
+        {
+            Display.getDefault().asyncExec(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    ExceptionErrorDialog.openError(Display.getDefault().getActiveShell(), "Image export error",
+                            "Unable to find the '" + name + "' image format", e.getStatus());
+                }
+            });
         }
         return null;
     }

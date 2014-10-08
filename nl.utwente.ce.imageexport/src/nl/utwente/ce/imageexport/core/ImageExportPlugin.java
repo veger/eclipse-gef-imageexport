@@ -64,7 +64,7 @@ public class ImageExportPlugin extends AbstractUIPlugin
     }
 
     /** @return a list of {@link IImageFormatProviders} that are available to export images */
-    public List<ImageFormatProvider> getImageProviders()
+    public List<ImageFormatProvider> getImageProviders() throws CoreException
     {
         if (imageProviders == null)
         {
@@ -74,20 +74,13 @@ public class ImageExportPlugin extends AbstractUIPlugin
                     FORMATPROVIDEREXTENSION_ID);
             for (IConfigurationElement element : elements)
             {
-                try
+                final Object o = element.createExecutableExtension("class");
+                if (o instanceof IImageFormatProvider)
                 {
-                    Object o = element.createExecutableExtension("class");
-                    if (o instanceof IImageFormatProvider)
-                    {
-                        final String id = element.getAttribute("id");
-                        final String name = element.getAttribute("name");
-                        final String extensions = element.getAttribute("extensions");
-                        imageProviders.add(new ImageFormatProvider(id, name, extensions, (IImageFormatProvider) o));
-                    }
-                } catch (CoreException exception)
-                {
-                    // Could not activate extension: just ignore, so the other will be available..!
-                    exception.printStackTrace();
+                    final String id = element.getAttribute("id");
+                    final String name = element.getAttribute("name");
+                    final String extensions = element.getAttribute("extensions");
+                    imageProviders.add(new ImageFormatProvider(id, name, extensions, (IImageFormatProvider) o));
                 }
             }
             imageProviders = Collections.unmodifiableList(imageProviders);
