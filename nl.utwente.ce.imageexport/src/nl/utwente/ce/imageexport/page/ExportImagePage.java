@@ -122,6 +122,11 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
                 String imageFormatPreference = ImageExportPlugin.getPreferences().getString(
                         PreferenceConstants.EXPORT_FORMAT);
                 int index = availableFormats.indexOf(imageFormatPreference);
+                if (index != -1 && availableFormats.size() > 0)
+                {
+                    // imageFormatPreference not found, select first from list
+                    index = 0;
+                }
                 if (index != -1)
                 {
                     // Select format stored in preferences
