@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Image export
 Bundle-SymbolicName: nl.utwente.ce.imageexport;singleton:=true
-Bundle-Version: 0.2.0.1
+Bundle-Version: 0.3.0
 Bundle-Vendor: Robotics and Mechatronics, University of Twente
 Bundle-Activator: nl.utwente.ce.imageexport.core.Activator
 Require-Bundle: org.eclipse.core.resources;bundle-version="3.7.0",

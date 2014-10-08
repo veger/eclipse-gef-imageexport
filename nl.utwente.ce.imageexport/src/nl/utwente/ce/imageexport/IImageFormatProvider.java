@@ -21,7 +21,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Interface to provide an image format, must be implemented by a class that provides a certain image for the
+ * Interface to provide an image format, must be implemented by a class that provides a certain image format for the
  * ImageExport plugin
  */
 public interface IImageFormatProvider
@@ -29,8 +29,9 @@ public interface IImageFormatProvider
     /**
      * @param formatID is the ID of the format for which the settings are requested
      * @param figure is the figure to export
+     * @param store is the {@link IPreferenceStore} to get the (default) preferences from
      */
-    void provideSettings(String formatID, Composite container);
+    void provideSettings(String formatID, Composite container, IPreferenceStore store);
 
     /**
      * Store the settings that are specific for this image provider

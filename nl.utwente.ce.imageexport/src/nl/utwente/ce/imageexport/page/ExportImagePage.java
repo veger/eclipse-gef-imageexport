@@ -249,7 +249,8 @@ public class ExportImagePage extends WizardPage implements SelectionListener, Mo
         else
         {
             formatSettings = new Composite(settingsGroup, SWT.NONE);
-            imageProvider.getProvider().provideSettings(imageProvider.getID(), formatSettings);
+            imageProvider.getProvider().provideSettings(imageProvider.getID(), formatSettings,
+                    Activator.getPreferences());
             settingComposites.put(imageProvider, formatSettings);
         }
 

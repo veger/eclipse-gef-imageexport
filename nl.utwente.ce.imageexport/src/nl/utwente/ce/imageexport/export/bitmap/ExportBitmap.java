@@ -34,7 +34,7 @@ import nl.utwente.ce.imageexport.Utils;
 public class ExportBitmap implements IImageFormatProvider
 {
     @Override
-    public void provideSettings(String formatID, Composite container)
+    public void provideSettings(String formatID, Composite container, IPreferenceStore store)
     {
     }
 

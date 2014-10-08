@@ -33,10 +33,10 @@ import nl.utwente.ce.imagexport.export.svg.utils.GraphicsToGraphics2DAdaptor;
 public class ExportSVG implements IImageFormatProvider
 {
     @Override
-    public void provideSettings(String formatID, Composite container)
+    public void provideSettings(String formatID, Composite container, IPreferenceStore store)
     {
     }
-    
+
     @Override
     public void storePreferences(IPreferenceStore store)
     {
